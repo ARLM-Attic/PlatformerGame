@@ -32,7 +32,13 @@ Map loadMap(const std::string& filename) {
 	return map;
 }
 
-void drawTilemap(const Map& map, SpriteBuffer& buffer, int tile_w, int tile_h, int tiles_per_row, int screen_x, int screen_y, int map_xoffset, int map_yoffset, int map_wtiles, int map_htiles) {
+void drawTilemap(
+	const Map& map, SpriteBuffer& buffer,
+	const int tile_w, const int tile_h, const int tiles_per_row,
+	const vec2 screen_pos,
+	const int map_xoffset, const int map_yoffset,
+	int map_wtiles, int map_htiles)
+{
 	Sprite spr;
 	spr.img.w = tile_w;
 	spr.img.h = tile_h;
@@ -53,8 +59,7 @@ void drawTilemap(const Map& map, SpriteBuffer& buffer, int tile_w, int tile_h, i
 			if (tile_id == 0)
 				continue;
 
-			spr.x = (tilex - map_xoffset) * tile_w + screen_x;
-			spr.y = (tiley - map_yoffset) * tile_h + screen_y;
+			spr.setPos(screen_pos + mvec2((float(tilex) - map_xoffset) * tile_w, (float(tiley) - map_yoffset) * tile_h));
 			spr.img.x = tile_id % tiles_per_row * tile_w;
 			spr.img.y = tile_id / tiles_per_row * tile_h;
 

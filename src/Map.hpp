@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cassert>
 #include <string>
+#include "util/vec2.hpp"
 
 struct SpriteBuffer;
 
@@ -23,4 +24,9 @@ struct Map {
 };
 
 Map loadMap(const std::string& filename);
-void drawTilemap(const Map& map, SpriteBuffer& buffer, int tile_w, int tile_h, int tiles_per_row, int screen_x, int screen_y, int map_xoffset, int map_yoffset, int map_wtiles, int map_htiles);
+void drawTilemap(
+	const Map& map, SpriteBuffer& buffer,
+	const int tile_w, const int tile_h, const int tiles_per_row,
+	const vec2 screen_pos,
+	const int map_xoffset, const int map_yoffset,
+	int map_wtiles, int map_htiles);

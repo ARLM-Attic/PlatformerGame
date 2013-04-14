@@ -68,3 +68,8 @@ template <typename T>
 T intDivRoundUp(T dividend, T divisor) {
 	return (dividend + divisor - 1) / divisor;
 }
+
+inline void intDiv(float x, float y, int& result, float& remainder) {
+	result = int(x / y);
+	remainder = x - int(x / y) * y;
+}

@@ -40,7 +40,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	draw_state.tileset_buffer.clear();
 	draw_state.ui_buffer.clear();
 
-	drawTilemap(game_state.map, draw_state.tileset_buffer, 16, 16, 16, 0, 0, 0, 0, -1, -1);
+	game_state.player_layer.draw(draw_state.tileset_buffer, game_state.camera);
 
 	/* Draw FPS */
 	{
@@ -65,8 +65,8 @@ void updateScene(GameState& game_state) {
 	InputButtons::Bitset& input = game_state.input;
 	input.set(InputButtons::LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
 	input.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
-	input.set(InputButtons::THRUST, glfwGetKey(GLFW_KEY_UP) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT));
-	input.set(InputButtons::BRAKE, glfwGetKey(GLFW_KEY_DOWN) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT));
+	input.set(InputButtons::UP, glfwGetKey(GLFW_KEY_UP) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT));
+	input.set(InputButtons::DOWN, glfwGetKey(GLFW_KEY_DOWN) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT));
 	input.set(InputButtons::SHOOT, glfwGetKey('X') || glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE));
 	glfwGetMousePos(&game_state.mouse_x, &game_state.mouse_y);
 	game_state.mouse_x = clamp(0, game_state.mouse_x, WINDOW_WIDTH-1);
@@ -74,7 +74,18 @@ void updateScene(GameState& game_state) {
 	glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
 
 
-	game_state.camera.pos = mPosition(0, 0);
+	if (input.at(InputButtons::LEFT)) {
+		game_state.camera.pos.x -= 2;
+	}
+	if (input.at(InputButtons::RIGHT)) {
+		game_state.camera.pos.x += 2;
+	}
+	if (input.at(InputButtons::UP)) {
+		game_state.camera.pos.y -= 2;
+	}
+	if (input.at(InputButtons::DOWN)) {
+		game_state.camera.pos.y += 2;
+	}
 }
 
 int main(int argc, const char* argv[]) {
@@ -129,7 +140,15 @@ int main(int argc, const char* argv[]) {
 	RandomGenerator& rng = game_state.rng;
 	rng.seed(1235);
 
-	game_state.map = loadMap("tilemap.txt");
+	{
+		BackgroundLayer& l = game_state.player_layer;
+		l.map = loadMap("tilemap.txt");
+		l.tiles_per_row = 16;
+		l.tile_w = l.tile_h = 16;
+		l.position = mPosition(0, 0);
+	}
+	game_state.camera.pos = mPosition(0, 0);
+
 
 	////////////////////
 	// Main game loop //

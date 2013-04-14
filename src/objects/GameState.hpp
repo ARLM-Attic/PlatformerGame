@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Camera.hpp"
-#include "Map.hpp"
+#include "BackgroundLayer.hpp"
 
 struct GameState {
 	RandomGenerator rng;
@@ -12,7 +12,7 @@ struct GameState {
 	int mouse_x, mouse_y;
 	Camera camera;
 
-	Map map;
+	BackgroundLayer player_layer;
 
 	double frametime_min, frametime_avg, frametime_max, fps;
 };

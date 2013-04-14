@@ -6,8 +6,8 @@ struct InputButtons {
 	enum Enum {
 		LEFT,
 		RIGHT,
-		THRUST,
-		BRAKE,
+		UP,
+		DOWN,
 		SHOOT,
 		MAX
 	};
