@@ -23,12 +23,11 @@
 #include "game_types.hpp"
 #include "objects/GameState.hpp"
 #include "RenderState.hpp"
-#include "render/debug_sprite.hpp"
 #include "util/geometry.hpp"
 #include "render/text.hpp"
-#include "starfield.hpp"
 #include "hud.hpp"
 #include "tools/tools_main.hpp"
+#include "Map.hpp"
 
 std::string formatFrametimeFloat(double x) {
 	std::ostringstream ss;
@@ -36,29 +35,12 @@ std::string formatFrametimeFloat(double x) {
 	return ss.str();
 }
 
-void drawScene(const GameState& game_state, RenderState& draw_state, const SpriteDb& sprite_db) {
+void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
-	draw_state.background_buffer.clear();
-	draw_state.sprite_buffer.clear();
-	draw_state.bullet_buffer.clear();
+	draw_state.tileset_buffer.clear();
 	draw_state.ui_buffer.clear();
 
-	static const float starfield_parallax = 1.0f / 32.0f;
-	for (int i = 0; i < 4; ++i) {
-		vec2 starfield_pos = -game_state.camera.transform(mPosition(0, 0)) * starfield_parallax * (float)i;
-		drawStarfield(draw_state, i*10, starfield_pos, draw_state.background_star_types);
-	}
-
-	for (const Drone& drone : game_state.drones) {
-		drone.draw(draw_state.sprite_buffer, draw_state.ui_buffer, game_state.camera);
-	}
-	for (const Debris& debris : game_state.debris) {
-		debris.draw(draw_state.sprite_buffer, game_state.camera);
-	}
-	for (const Bullet& bullet : game_state.bullets) {
-		bullet.draw(draw_state.bullet_buffer, game_state.camera);
-	}
-	game_state.player_ship.draw(draw_state.sprite_buffer, game_state.camera);
+	drawTilemap(game_state.map, draw_state.tileset_buffer, 16, 16, 16, 0, 0, 0, 0, -1, -1);
 
 	/* Draw FPS */
 	{
@@ -73,21 +55,13 @@ void drawScene(const GameState& game_state, RenderState& draw_state, const Sprit
 		drawString(WINDOW_WIDTH, 3*8, max_text, draw_state.ui_buffer, ui_font, TextAlignment::right, color_white);
 	}
 
-	Sprite mouse_cursor;
-	mouse_cursor.img = sprite_db.lookup("ui_crosshair");
-	mouse_cursor.color = hud_color;
-	mouse_cursor.setPos(game_state.mouse_x - 5, game_state.mouse_y - 5);
-	draw_state.ui_buffer.append(mouse_cursor);
-
 	/* Submit sprites */
 	glClear(GL_COLOR_BUFFER_BIT);
-	draw_state.background_buffer.draw(draw_state.sprite_buffer_indices);
-	draw_state.sprite_buffer.draw(draw_state.sprite_buffer_indices);
-	draw_state.bullet_buffer.draw(draw_state.sprite_buffer_indices);
+	draw_state.tileset_buffer.draw(draw_state.sprite_buffer_indices);
 	draw_state.ui_buffer.draw(draw_state.sprite_buffer_indices);
 }
 
-void updateScene(GameState& game_state, const SpriteDb& sprite_db) {
+void updateScene(GameState& game_state) {
 	InputButtons::Bitset& input = game_state.input;
 	input.set(InputButtons::LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
 	input.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
@@ -100,46 +74,7 @@ void updateScene(GameState& game_state, const SpriteDb& sprite_db) {
 	glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
 
 
-	game_state.player_ship.update(input, game_state);
-	for (Bullet& bullet : game_state.bullets) {
-		bullet.update();
-	}
-	for (Drone& drone : game_state.drones) {
-		drone.update();
-	}
-
-	// Test bullet-drone collision and bullet lifetime
-	remove_if(game_state.bullets, [&](const Bullet& bullet) -> bool {
-		if (bullet.life == 0)
-			return true;
-		for (Drone& drone : game_state.drones) {
-			vec2 rel_pos = drone.rb.pos - bullet.physp.pos;
-			float drone_radius = drone.shield.cur_level > 0 ? drone.shield.shield_radius : 8.0f;
-			if (collideCircleRectangle(rel_pos, drone_radius, mvec2(13.0f / 2, 3.0f / 2), bullet.orientation)) {
-				drone.getHit(1, -rel_pos);
-				return true;
-			}
-		}
-		return false;
-	});
-
-	// Kill drones with no health
-	remove_if(game_state.drones, [&](const Drone& drone) -> bool {
-		if (drone.current_hull > 0)
-			return false;
-
-		drone.spawnDebris(game_state.debris, game_state.rng);
-		return true;
-	});
-
-	for (Debris& debris : game_state.debris) {
-		debris.update();
-	}
-	remove_if(game_state.debris, [&](const Debris& debris) -> bool {
-		return debris.life == 0;
-	});
-
-	game_state.camera.pos = game_state.player_ship.rb.pos;
+	game_state.camera.pos = mPosition(0, 0);
 }
 
 int main(int argc, const char* argv[]) {
@@ -178,25 +113,12 @@ int main(int argc, const char* argv[]) {
 
 	CHECK_GL_ERROR;
 
-	initDebugSprites();
-
 	RenderState draw_state;
-	SpriteDb sprite_db;
 	CHECK_GL_ERROR;
 
-	draw_state.background_buffer.texture = loadTexture("background.png");
-	sprite_db.loadFromCsv("background.csv");
-	draw_state.background_star_types = sprite_db.lookupSequence("star");
-
-	draw_state.sprite_buffer.texture = loadTexture("ships.png");
-	sprite_db.loadFromCsv("ships.csv");
-
-	draw_state.bullet_buffer.texture = loadTexture("bullets.png");
-	sprite_db.loadFromCsv("bullets.csv");
-
-	draw_state.ui_buffer.texture = loadTexture("ui.png");
-	sprite_db.loadFromCsv("ui.csv");
-	initUiFont(sprite_db);
+	draw_state.tileset_buffer.texture = loadTexture("tileset.png");
+	draw_state.ui_buffer.texture = loadTexture("ui_font.png");
+	initUiFont();
 
 	CHECK_GL_ERROR;
 
@@ -207,19 +129,7 @@ int main(int argc, const char* argv[]) {
 	RandomGenerator& rng = game_state.rng;
 	rng.seed(1235);
 
-	{
-		Ship& ship = game_state.player_ship;
-		ship.init(sprite_db);
-		ship.rb.pos = mPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-	}
-
-	game_state.drones.resize(24);
-	for (Drone& drone : game_state.drones) {
-		drone.init(rng, sprite_db);
-		drone.rb.pos = mPosition(
-			randRange(rng, -WINDOW_WIDTH,  2 * WINDOW_WIDTH  - 1),
-			randRange(rng, -WINDOW_HEIGHT, 2 * WINDOW_HEIGHT - 1));
-	}
+	game_state.map = loadMap("tilemap.txt");
 
 	////////////////////
 	// Main game loop //
@@ -242,7 +152,7 @@ int main(int argc, const char* argv[]) {
 		if (++frametimes_pos >= frametimes.size()) frametimes_pos = 0;
 
 		while (update_time > 0.0) {
-			updateScene(game_state, sprite_db);
+			updateScene(game_state);
 			update_time -= TIMESTEP;
 		}
 
@@ -252,8 +162,7 @@ int main(int argc, const char* argv[]) {
 		game_state.frametime_avg = std::accumulate(frametimes.cbegin(), frametimes.cend(), 0.0) / frametimes.size();
 		game_state.fps = 1.f / game_state.frametime_avg;
 
-		drawScene(game_state, draw_state, sprite_db);
-		drawDebugSprites(draw_state.sprite_buffer_indices);
+		drawScene(game_state, draw_state);
 
 		glfwSwapBuffers();
 		running = running && glfwGetWindowParam(GLFW_OPENED);
@@ -261,8 +170,6 @@ int main(int argc, const char* argv[]) {
 
 		CHECK_GL_ERROR;
 	}
-
-	deinitDebugSprites();
 
 	}
 

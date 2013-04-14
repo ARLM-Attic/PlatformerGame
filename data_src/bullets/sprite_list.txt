@@ -1,4 +1,0 @@
-bullet_plasma,6,6
-bullet_pulse_a
-bullet_pulse_b
-bullet_wave

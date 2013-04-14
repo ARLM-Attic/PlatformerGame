@@ -1,3 +1,0 @@
-ui_crosshair
-ui_cursor
-ui_font
