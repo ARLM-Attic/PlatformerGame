@@ -2,8 +2,8 @@
 #include "util/Position.hpp"
 #include "util/vec2.hpp"
 
-static const int WINDOW_WIDTH = 800;
-static const int WINDOW_HEIGHT = 600;
+static const int WINDOW_WIDTH = 320;
+static const int WINDOW_HEIGHT = 240;
 
 struct Camera {
 	Position pos;

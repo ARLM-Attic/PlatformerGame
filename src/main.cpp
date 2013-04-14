@@ -42,6 +42,8 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 
 	game_state.player_layer.draw(draw_state.tileset_buffer, game_state.camera);
 
+	game_state.player.draw(draw_state.characters_buffer, game_state.camera);
+
 	/* Draw FPS */
 	{
 		const std::string fps_text = "FPS: " + formatFrametimeFloat(game_state.fps);
@@ -58,6 +60,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Submit sprites */
 	glClear(GL_COLOR_BUFFER_BIT);
 	draw_state.tileset_buffer.draw(draw_state.sprite_buffer_indices);
+	draw_state.characters_buffer.draw(draw_state.sprite_buffer_indices);
 	draw_state.ui_buffer.draw(draw_state.sprite_buffer_indices);
 }
 
@@ -73,19 +76,10 @@ void updateScene(GameState& game_state) {
 	game_state.mouse_y = clamp(0, game_state.mouse_y, WINDOW_HEIGHT-1);
 	glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
 
+	game_state.player.update(game_state, input);
 
-	if (input.at(InputButtons::LEFT)) {
-		game_state.camera.pos.x -= 2;
-	}
-	if (input.at(InputButtons::RIGHT)) {
-		game_state.camera.pos.x += 2;
-	}
-	if (input.at(InputButtons::UP)) {
-		game_state.camera.pos.y -= 2;
-	}
-	if (input.at(InputButtons::DOWN)) {
-		game_state.camera.pos.y += 2;
-	}
+	game_state.camera.pos = game_state.player.pos;
+	
 }
 
 int main(int argc, const char* argv[]) {
@@ -120,7 +114,7 @@ int main(int argc, const char* argv[]) {
 	glActiveTexture(GL_TEXTURE0);
 	glEnable(GL_TEXTURE_2D);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.08f, 0.08f, 0.08f, 1.0f);
 
 	CHECK_GL_ERROR;
 
@@ -128,6 +122,10 @@ int main(int argc, const char* argv[]) {
 	CHECK_GL_ERROR;
 
 	draw_state.tileset_buffer.texture = loadTexture("tileset.png");
+
+	draw_state.characters_buffer.texture = loadTexture("characters.png");
+	draw_state.characters_sprdb.loadFromCsv("characters.csv");
+
 	draw_state.ui_buffer.texture = loadTexture("ui_font.png");
 	initUiFont();
 
@@ -147,7 +145,9 @@ int main(int argc, const char* argv[]) {
 		l.tile_w = l.tile_h = 16;
 		l.position = mPosition(0, 0);
 	}
-	game_state.camera.pos = mPosition(0, 0);
+
+	game_state.player.init(draw_state.characters_sprdb);
+	game_state.player.pos = mPosition(0, 0);
 
 
 	////////////////////

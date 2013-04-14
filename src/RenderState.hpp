@@ -7,5 +7,9 @@
 struct RenderState {
 	SpriteBufferIndices sprite_buffer_indices;
 	SpriteBuffer tileset_buffer;
+
+	SpriteBuffer characters_buffer;
+	SpriteDb characters_sprdb;
+
 	SpriteBuffer ui_buffer;
 };

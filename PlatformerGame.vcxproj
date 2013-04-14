@@ -83,6 +83,7 @@
     <ClCompile Include="src\hud.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\objects\BackgroundLayer.cpp" />
+    <ClCompile Include="src\objects\Player.cpp" />
     <ClCompile Include="src\render\debug_sprite.cpp" />
     <ClCompile Include="src\render\SpriteDb.cpp" />
     <ClCompile Include="src\tools\atlas_packer.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="src\hud.hpp" />
     <ClInclude Include="src\objects\BackgroundLayer.hpp" />
     <ClInclude Include="src\objects\Camera.hpp" />
+    <ClInclude Include="src\objects\Player.hpp" />
     <ClInclude Include="src\render\debug_sprite.hpp" />
     <ClInclude Include="src\RenderState.hpp" />
     <ClInclude Include="src\render\SpriteDb.hpp" />
