@@ -12,7 +12,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{37186B7B-71DF-4E3E-8D7D-C0178E989C14}</ProjectGuid>
-    <RootNamespace>SpaceCrawler</RootNamespace>
+    <RootNamespace>PlatformerGame</RootNamespace>
+    <ProjectName>PlatformerGame</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -1,4 +1,4 @@
-@set builder=Debug\SpaceCrawler.exe -t
+@set builder=Debug\PlatformerGame.exe -t
 
 rmdir /s /q data
 mkdir data
