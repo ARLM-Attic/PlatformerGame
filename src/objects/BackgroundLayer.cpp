@@ -5,7 +5,6 @@
 
 void BackgroundLayer::draw(SpriteBuffer& buffer, const Camera& camera) const {
 	vec2 map_offset = camera.transform(position);
-	//map_offset = mvec2(64, 0);
 
 	int tiles_in_x = intDivRoundUp(WINDOW_WIDTH, tile_w);
 	int tiles_in_y = intDivRoundUp(WINDOW_HEIGHT, tile_h);
