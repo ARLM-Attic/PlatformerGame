@@ -32,7 +32,6 @@ void Player::update(GameState& game_state, const InputButtons::Bitset& input) {
 	move_velocity = clamp(-max_movement_vel, move_velocity, max_movement_vel);
 
 	if (input.at(InputButtons::UP) && on_ground) {
-		std::cerr << "jump!!!" << std::endl;
 		jump_velocity = -6;
 	}
 	/*
@@ -89,7 +88,6 @@ void Player::update(GameState& game_state, const InputButtons::Bitset& input) {
 				} else if (displacement[d] > 0.f) {
 					pos[d] = (((pos[d].integer() - layer.position[d]) / layer.tile_size[d]) * layer.tile_size[d]) + layer.position[d];
 				}
-				assert(pos[d] == pos[d].trunc());
 			}
 		}
 	}
@@ -98,7 +96,6 @@ void Player::update(GameState& game_state, const InputButtons::Bitset& input) {
 }
 
 void Player::draw(SpriteBuffer& buffer, const Camera& camera) const {
-	//assert(pos[0] == pos[0].trunc());
 	Sprite spr;
 	spr.img = image;
 	spr.setPos(camera.transform(pos.integer()));
