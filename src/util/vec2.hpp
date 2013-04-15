@@ -2,10 +2,11 @@
 #include <cmath>
 #include <cassert>
 
-struct vec2 {
-	float x, y;
+template <typename T>
+struct Vector2 {
+	T x, y;
 
-	inline float& operator[](int i) {
+	inline T& operator[](int i) {
 		if (i == 0) {
 			return x;
 		} else if (i == 1) {
@@ -16,7 +17,7 @@ struct vec2 {
 		}
 	}
 
-	inline const float& operator[](int i) const {
+	inline const T& operator[](int i) const {
 		if (i == 0) {
 			return x;
 		} else if (i == 1) {
@@ -28,46 +29,78 @@ struct vec2 {
 	}
 };
 
+typedef Vector2<float> vec2;
+typedef Vector2<int> ivec2;
+
 static const vec2 vec2_0 = {0.0f, 0.0f};
 static const vec2 vec2_1 = {1.0f, 1.0f};
 static const vec2 vec2_x = {1.0f, 0.0f};
 static const vec2 vec2_y = {0.0f, 1.0f};
+
+static const ivec2 ivec2_0 = {0, 0};
+static const ivec2 ivec2_1 = {1, 1};
+static const ivec2 ivec2_x = {1, 0};
+static const ivec2 ivec2_y = {0, 1};
+
+template <typename T>
+inline Vector2<T> mVector2(T x, T y) {
+	Vector2<T> tmp = {x, y};
+	return tmp;
+}
 
 inline vec2 mvec2(float x, float y) {
 	vec2 tmp = {x, y};
 	return tmp;
 }
 
-inline bool operator ==(const vec2 a, const vec2 b) {
+inline ivec2 mivec2(int x, int y) {
+	ivec2 tmp = {x, y};
+	return tmp;
+}
+
+template <typename T>
+inline bool operator ==(const Vector2<T> a, const Vector2<T> b) {
 	return a.x == b.x && a.y == b.y;
 }
 
-inline vec2 operator +(const vec2 a, const vec2 b) {
-	return mvec2(a.x + b.x, a.y + b.y);
+template <typename T>
+inline Vector2<T> operator +(const Vector2<T> a, const Vector2<T> b) {
+	return mVector2<T>(a.x + b.x, a.y + b.y);
 }
 
-inline vec2 operator -(const vec2 a, const vec2 b) {
-	return mvec2(a.x - b.x, a.y - b.y);
+template <typename T>
+inline Vector2<T> operator -(const Vector2<T> a, const Vector2<T> b) {
+	return mVector2<T>(a.x - b.x, a.y - b.y);
 }
 
-inline vec2 operator *(const float s, const vec2 v) {
-	return mvec2(s*v.x, s*v.y);
+template <typename T>
+inline Vector2<T> operator *(const T s, const Vector2<T> v) {
+	return mVector2<T>(s*v.x, s*v.y);
 }
 
-inline vec2 operator *(const vec2 v, const float s) {
+template <typename T>
+inline Vector2<T> operator *(const Vector2<T> v, const T s) {
 	return s * v;
 }
 
-inline vec2 operator /(const float s, const vec2 v) {
-	return mvec2(s/v.x, s/v.y);
+template <typename T>
+inline Vector2<T> operator /(const T s, const Vector2<T> v) {
+	return mVector2<T>(s/v.x, s/v.y);
 }
 
-inline vec2 operator /(const vec2 v, const float s) {
-	return mvec2(v.x/s, v.y/s);
+template <typename T>
+inline Vector2<T> operator /(const Vector2<T> v, const T s) {
+	return mVector2<T>(v.x/s, v.y/s);
 }
 
-inline vec2 operator -(const vec2 v) {
-	return mvec2(-v.x, -v.y);
+template <typename T>
+inline Vector2<T> operator -(const Vector2<T> v) {
+	return mVector2<T>(-v.x, -v.y);
+}
+
+template <typename DSTT, typename SRCT>
+inline Vector2<DSTT> vector_cast(const Vector2<SRCT> v) {
+	return mVector2<DSTT>(DSTT(v.x), DSTT(v.y));
 }
 
 inline float dot(const vec2 a, const vec2 b) {
