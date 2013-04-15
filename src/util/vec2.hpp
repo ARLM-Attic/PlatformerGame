@@ -1,8 +1,31 @@
 #pragma once
 #include <cmath>
+#include <cassert>
 
 struct vec2 {
 	float x, y;
+
+	inline float& operator[](int i) {
+		if (i == 0) {
+			return x;
+		} else if (i == 1) {
+			return y;
+		} else {
+			assert(false);
+			return x;
+		}
+	}
+
+	inline const float& operator[](int i) const {
+		if (i == 0) {
+			return x;
+		} else if (i == 1) {
+			return y;
+		} else {
+			assert(false);
+			return x;
+		}
+	}
 };
 
 static const vec2 vec2_0 = {0.0f, 0.0f};
