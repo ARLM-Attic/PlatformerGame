@@ -42,8 +42,8 @@ public:
 		return float(value) / float(T(1) << FRACTIONAL_BITS);
 	}
 
-	Fixed trunc() const { return raw(value & ~FRACTIONAL_MASK); }
-	Fixed frac() const { return raw(value & FRACTIONAL_MASK); }
+	Fixed trunc() const { return raw(value - frac().value); }
+	Fixed frac() const { return raw(value % (T(1) << FRACTIONAL_BITS)); }
 
 	///////////////////////////////////
 
