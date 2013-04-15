@@ -147,7 +147,7 @@ int main(int argc, const char* argv[]) {
 	}
 
 	game_state.player.init(draw_state.characters_sprdb);
-	game_state.player.pos = mPosition(0, 0);
+	game_state.player.pos = mPosition(96, 96);
 
 
 	////////////////////

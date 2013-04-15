@@ -14,4 +14,7 @@ struct BackgroundLayer {
 	Position position;
 
 	void draw(SpriteBuffer& buffer, const Camera& camera) const;
+
+	uint16_t getTileAt(Position world_pos) const;
+	void getTilePosAt(Position world_pos, int& x, int& y) const;
 };

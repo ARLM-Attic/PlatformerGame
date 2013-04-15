@@ -17,8 +17,9 @@ struct Map {
 	{}
 
 	uint16_t get(int x, int y) const {
-		assert(x < width);
-		assert(y < height);
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return 0;
+		}
 		return data[y * width + x];
 	}
 };

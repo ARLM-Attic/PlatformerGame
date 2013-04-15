@@ -16,3 +16,14 @@ void BackgroundLayer::draw(SpriteBuffer& buffer, const Camera& camera) const {
 
 	drawTilemap(map, buffer, tile_size[0], tile_size[1], tiles_per_row, mvec2(x_pos_offset, y_pos_offset), -x_tiles_offset, -y_tiles_offset, tiles_in_x, tiles_in_y);
 }
+
+uint16_t BackgroundLayer::getTileAt(Position world_pos) const {
+	int x, y;
+	getTilePosAt(world_pos, x, y);
+	return map.get(x, y);
+}
+
+void BackgroundLayer::getTilePosAt(Position world_pos, int& x, int& y) const {
+	x = ((world_pos.x - position.x) / fixed32_0(tile_size[0])).integer();
+	y = ((world_pos.y - position.y) / fixed32_0(tile_size[1])).integer();
+}
