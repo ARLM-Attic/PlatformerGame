@@ -71,10 +71,11 @@ void updateScene(GameState& game_state) {
 	input.set(InputButtons::UP, glfwGetKey(GLFW_KEY_UP) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT));
 	input.set(InputButtons::DOWN, glfwGetKey(GLFW_KEY_DOWN) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT));
 	input.set(InputButtons::SHOOT, glfwGetKey('X') || glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE));
-	glfwGetMousePos(&game_state.mouse_x, &game_state.mouse_y);
-	game_state.mouse_x = clamp(0, game_state.mouse_x, WINDOW_WIDTH-1);
-	game_state.mouse_y = clamp(0, game_state.mouse_y, WINDOW_HEIGHT-1);
-	glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
+	//input.set(InputButtons::RIGHT, true);
+	//glfwGetMousePos(&game_state.mouse_x, &game_state.mouse_y);
+	//game_state.mouse_x = clamp(0, game_state.mouse_x, WINDOW_WIDTH-1);
+	//game_state.mouse_y = clamp(0, game_state.mouse_y, WINDOW_HEIGHT-1);
+	//glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
 
 	game_state.player.update(game_state, input);
 
