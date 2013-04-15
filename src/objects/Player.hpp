@@ -11,6 +11,10 @@ struct Camera;
 
 struct Player {
 	Position pos;
+	bool on_ground;
+
+	float move_velocity;
+	float jump_velocity;
 
 	IntRect image;
 

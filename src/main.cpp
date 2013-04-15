@@ -79,7 +79,7 @@ void updateScene(GameState& game_state) {
 
 	game_state.player.update(game_state, input);
 
-	game_state.camera.pos = game_state.player.pos;
+	game_state.camera.pos = game_state.player.pos.integer();
 	
 }
 
@@ -144,11 +144,11 @@ int main(int argc, const char* argv[]) {
 		l.map = loadMap("tilemap.txt");
 		l.tiles_per_row = 16;
 		l.tile_size[0] = l.tile_size[1] = 16;
-		l.position = mPosition(0, 0);
+		l.position = mivec2(0, 0);
 	}
 
 	game_state.player.init(draw_state.characters_sprdb);
-	game_state.player.pos = mPosition(96, 96);
+	game_state.player.pos = mPosition(96, 192);
 
 
 	////////////////////

@@ -29,6 +29,10 @@ struct Position {
 			return x;
 		}
 	}
+
+	ivec2 integer() const {
+		return mivec2(x.integer(), y.integer());
+	}
 };
 
 inline Position mPosition(const PositionFixed x, const PositionFixed y) {
