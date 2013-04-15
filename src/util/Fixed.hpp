@@ -42,6 +42,9 @@ public:
 		return float(value) / float(T(1) << FRACTIONAL_BITS);
 	}
 
+	Fixed trunc() const { return raw(value & ~FRACTIONAL_MASK); }
+	Fixed frac() const { return raw(value & FRACTIONAL_MASK); }
+
 	///////////////////////////////////
 
 	Fixed operator +(Fixed o) const { return Fixed::raw(value + o.value); }
