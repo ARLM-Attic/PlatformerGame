@@ -8,7 +8,7 @@ struct Camera;
 
 struct BackgroundLayer {
 	Map map;
-	int tile_w, tile_h;
+	int tile_size[2];
 	int tiles_per_row;
 
 	Position position;

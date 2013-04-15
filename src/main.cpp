@@ -142,7 +142,7 @@ int main(int argc, const char* argv[]) {
 		BackgroundLayer& l = game_state.player_layer;
 		l.map = loadMap("tilemap.txt");
 		l.tiles_per_row = 16;
-		l.tile_w = l.tile_h = 16;
+		l.tile_size[0] = l.tile_size[1] = 16;
 		l.position = mPosition(0, 0);
 	}
 
