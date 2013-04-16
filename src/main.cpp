@@ -197,12 +197,14 @@ int main(int argc, const char* argv[]) {
 		game_state.frametime_avg = std::accumulate(frametimes.cbegin(), frametimes.cend(), 0.0) / frametimes.size();
 		game_state.fps = 1.f / game_state.frametime_avg;
 
-		drawScene(game_state, draw_state);
-
-		glfwSwapBuffers();
 		running = running && glfwGetWindowParam(GLFW_OPENED);
 		running = running && glfwGetKey(GLFW_KEY_ESC) == GL_FALSE;
+		if (!running) {
+			continue;
+		}
 
+		drawScene(game_state, draw_state);
+		glfwSwapBuffers();
 		CHECK_GL_ERROR;
 	}
 
