@@ -80,7 +80,13 @@ void updateScene(GameState& game_state) {
 
 	game_state.player.update(game_state, input);
 
-	game_state.camera.pos = game_state.player.pos.integer();
+	vec2 displacement = vector_cast<float>(game_state.camera.pos.integer() - (game_state.player.pos.integer() + (game_state.player.size / 2) + mivec2(game_state.player.facing_direction * 64, 0)));
+	float k = 0.035f;
+	float b = 0.8f;
+	vec2 player_velocity = { game_state.player.move_velocity, game_state.player.jump_velocity };
+	vec2 force = -k * displacement - b * (game_state.camera.velocity - player_velocity);
+	game_state.camera.velocity = game_state.camera.velocity + force;
+	game_state.camera.pos = game_state.camera.pos + game_state.camera.velocity;//;
 	
 }
 
@@ -150,6 +156,9 @@ int main(int argc, const char* argv[]) {
 
 	game_state.player.init(draw_state.characters_sprdb);
 	game_state.player.pos = mPosition(96, 192);
+
+	game_state.camera.pos = game_state.player.pos;
+	game_state.camera.velocity = vec2_0;
 
 
 	////////////////////

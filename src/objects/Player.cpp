@@ -9,25 +9,27 @@
 void Player::init(const SpriteDb& sprite_db) {
 	image = sprite_db.lookup("player_stand");
 	on_ground = false;
+	size = mivec2(16, 32);
 
+	facing_direction = 1;
 	move_velocity = 0.f;
 	jump_velocity = 0.f;
 }
 
 void Player::update(GameState& game_state, const InputButtons::Bitset& input) {
-	static const float max_movement_vel = 4;
-	static const float movement_vel_accel = 0.25f;
+	static const float max_movement_vel = 2.5;
+	static const float movement_vel_accel = 0.15f;
 
 	vec2 displacement = vec2_0;
 
-	if (input.at(InputButtons::LEFT)) {
+	if (input.at(InputButtons::LEFT) == input.at(InputButtons::RIGHT)) {
+		move_velocity = stepTowards(move_velocity, 0.f, 0.1f);
+	} else if (input.at(InputButtons::LEFT)) {
 		move_velocity -= movement_vel_accel;
-	}
-	if (input.at(InputButtons::RIGHT)) {
+		facing_direction = -1;
+	} else if (input.at(InputButtons::RIGHT)) {
 		move_velocity += movement_vel_accel;
-	}
-	if (!input.at(InputButtons::LEFT) && !input.at(InputButtons::RIGHT)) {
-		move_velocity = stepTowards(move_velocity, 0.f, 0.4f);
+		facing_direction = 1;
 	}
 	move_velocity = clamp(-max_movement_vel, move_velocity, max_movement_vel);
 
@@ -48,12 +50,10 @@ void Player::update(GameState& game_state, const InputButtons::Bitset& input) {
 	displacement.x += move_velocity;
 	displacement.y += jump_velocity;
 
-	static const int PLAYER_SIZE[2] = {32, 32};
-
 	const BackgroundLayer& layer = game_state.player_layer;
 
 	auto checkCollision = [&](int d, int horz) {
-		const int bottom = pos[1-d].integer() + PLAYER_SIZE[1-d] - 1;
+		const int bottom = pos[1-d].integer() + size[1-d] - 1;
 		bool collided = false;
 		ivec2 sensor_pos;
 		sensor_pos[d] = horz;
@@ -73,7 +73,7 @@ void Player::update(GameState& game_state, const InputButtons::Bitset& input) {
 
 			int horz = pos[d].integer();
 			if (displacement[d] > 0.f) {
-				horz += PLAYER_SIZE[d] - 1;
+				horz += size[d] - 1;
 			}
 
 			if (checkCollision(d, horz)) {
@@ -92,12 +92,12 @@ void Player::update(GameState& game_state, const InputButtons::Bitset& input) {
 		}
 	}
 
-	on_ground = checkCollision(1, pos[1].integer() + PLAYER_SIZE[1]);
+	on_ground = checkCollision(1, pos[1].integer() + size[1]);
 }
 
 void Player::draw(SpriteBuffer& buffer, const Camera& camera) const {
 	Sprite spr;
 	spr.img = image;
-	spr.setPos(camera.transform(pos.integer()));
+	spr.setPos(camera.transform(pos.integer() + mivec2(-8, 0)));
 	buffer.append(spr);
 }

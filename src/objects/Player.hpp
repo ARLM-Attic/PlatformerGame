@@ -12,7 +12,9 @@ struct Camera;
 struct Player {
 	Position pos;
 	bool on_ground;
+	ivec2 size;
 
+	int facing_direction;
 	float move_velocity;
 	float jump_velocity;
 
