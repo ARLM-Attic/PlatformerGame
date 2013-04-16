@@ -38,6 +38,7 @@ std::string formatFrametimeFloat(double x) {
 void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
 	draw_state.tileset_buffer.clear();
+	draw_state.characters_buffer.clear();
 	draw_state.ui_buffer.clear();
 
 	game_state.player_layer.draw(draw_state.tileset_buffer, game_state.camera);
