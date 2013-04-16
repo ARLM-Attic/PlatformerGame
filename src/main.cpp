@@ -66,12 +66,16 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 }
 
 void updateScene(GameState& game_state) {
-	InputButtons::Bitset& input = game_state.input;
-	input.set(InputButtons::LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
-	input.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
-	input.set(InputButtons::UP, glfwGetKey(GLFW_KEY_UP) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT));
-	input.set(InputButtons::DOWN, glfwGetKey(GLFW_KEY_DOWN) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT));
-	input.set(InputButtons::SHOOT, glfwGetKey('X') || glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE));
+	InputButtons& input = game_state.input;
+	InputButtons::Bitset previous_held = input.held;
+
+	input.held.set(InputButtons::LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
+	input.held.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
+	input.held.set(InputButtons::UP, glfwGetKey(GLFW_KEY_UP) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT));
+	input.held.set(InputButtons::DOWN, glfwGetKey(GLFW_KEY_DOWN) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT));
+	input.held.set(InputButtons::SHOOT, glfwGetKey('X') || glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE));
+	input.pressed = ~previous_held & input.held;
+	input.released = previous_held & ~input.held;
 	//input.set(InputButtons::RIGHT, true);
 	//glfwGetMousePos(&game_state.mouse_x, &game_state.mouse_y);
 	//game_state.mouse_x = clamp(0, game_state.mouse_x, WINDOW_WIDTH-1);

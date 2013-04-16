@@ -13,4 +13,8 @@ struct InputButtons {
 	};
 
 	typedef std::bitset<MAX> Bitset;
+
+	Bitset pressed;
+	Bitset held;
+	Bitset released;
 };

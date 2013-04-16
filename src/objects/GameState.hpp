@@ -9,7 +9,7 @@
 
 struct GameState {
 	RandomGenerator rng;
-	InputButtons::Bitset input;
+	InputButtons input;
 	int mouse_x, mouse_y;
 	Camera camera;
 

@@ -4,6 +4,7 @@
 #include "RenderState.hpp"
 #include "render/SpriteDb.hpp"
 #include "Camera.hpp"
+#include "game_types.hpp"
 #include <iostream>
 
 void Player::init(const SpriteDb& sprite_db) {
@@ -16,24 +17,24 @@ void Player::init(const SpriteDb& sprite_db) {
 	jump_velocity = 0.f;
 }
 
-void Player::update(GameState& game_state, const InputButtons::Bitset& input) {
+void Player::update(GameState& game_state, const InputButtons& input) {
 	static const float max_movement_vel = 2.5;
 	static const float movement_vel_accel = 0.15f;
 
 	vec2 displacement = vec2_0;
 
-	if (input.at(InputButtons::LEFT) == input.at(InputButtons::RIGHT)) {
+	if (input.held[InputButtons::LEFT] == input.held[InputButtons::RIGHT]) {
 		move_velocity = stepTowards(move_velocity, 0.f, 0.1f);
-	} else if (input.at(InputButtons::LEFT)) {
+	} else if (input.held[InputButtons::LEFT]) {
 		move_velocity -= movement_vel_accel;
 		facing_direction = -1;
-	} else if (input.at(InputButtons::RIGHT)) {
+	} else if (input.held[InputButtons::RIGHT]) {
 		move_velocity += movement_vel_accel;
 		facing_direction = 1;
 	}
 	move_velocity = clamp(-max_movement_vel, move_velocity, max_movement_vel);
 
-	if (input.at(InputButtons::UP) && on_ground) {
+	if (input.pressed[InputButtons::UP] && on_ground) {
 		jump_velocity = -6;
 	}
 	/*
