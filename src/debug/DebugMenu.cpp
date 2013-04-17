@@ -8,6 +8,7 @@ DebugConstantBase* debug_constant_list_head = nullptr;
 DebugConstantBase* debug_constant_list_tail = nullptr;
 
 static DebugConstantBase* selected_entry = nullptr;
+static bool menu_enabled = false;
 
 std::string toUpper(std::string str) {
 	for (char& c : str) {
@@ -17,6 +18,9 @@ std::string toUpper(std::string str) {
 }
 
 void drawDebugMenu(SpriteBuffer& ui_buffer, const FontInfo& font_info) {
+	if (!menu_enabled)
+		return;
+
 	int y = 0;
 
 	for (DebugConstantBase* p = debug_constant_list_head; p != nullptr; p = p->next) {
@@ -46,9 +50,15 @@ void drawDebugMenu(SpriteBuffer& ui_buffer, const FontInfo& font_info) {
 }
 
 void updateDebugMenu(const InputButtons& input) {
-	if (debug_constant_list_head == debug_constant_list_tail) {
-		return;
+	if (input.pressed[InputButtons::DEBUG_ENTER]) {
+		menu_enabled = !menu_enabled;
 	}
+
+	if (debug_constant_list_head == debug_constant_list_tail)
+		menu_enabled = false;
+	if (!menu_enabled)
+		return;
+
 	if (selected_entry == nullptr) {
 		selected_entry = debug_constant_list_head;
 	}
