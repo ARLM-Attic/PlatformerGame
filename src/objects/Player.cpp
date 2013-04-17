@@ -8,8 +8,13 @@
 #include <iostream>
 #include "debug/DebugConstant.hpp"
 
-DebugConstant<float> max_movement_vel(2.25f, "Max move");
-DebugConstant<float> movement_vel_accel(0.15f, "Move accel");
+static DebugConstant<float> MAX_MOVEMENT_VEL(2.25f, "Max move");
+static DebugConstant<float> MOVEMENT_VEL_ACCEL(0.15f, "Move accel");
+static DebugConstant<float> JUMP_VELOCITY(-6, "Jump vel");
+static DebugConstant<float> FALL_GRAVITY(0.3f, "Fall grav");
+static DebugConstant<float> JUMP_HIGH_GRAVITY(0.25f, "Jump high grav");
+static DebugConstant<float> JUMP_LOW_GRAVITY(0.8f, "Jump low grav");
+static DebugConstant<float> LEDGE_FALL_VELOCITY(2, "Ledge fall vel");
 
 void Player::init(const SpriteDb& sprite_db) {
 	image = sprite_db.lookup("player_stand");
@@ -31,16 +36,16 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 
 	if (input.held[InputButtons::LEFT] == input.held[InputButtons::RIGHT]) {
 	} else if (input.held[InputButtons::LEFT]) {
-		move_velocity -= movement_vel_accel;
+		move_velocity -= MOVEMENT_VEL_ACCEL;
 		facing_direction = -1;
 	} else if (input.held[InputButtons::RIGHT]) {
-		move_velocity += movement_vel_accel;
+		move_velocity += MOVEMENT_VEL_ACCEL;
 		facing_direction = 1;
 	}
-	move_velocity = clamp(-max_movement_vel.value, move_velocity, max_movement_vel.value);
+	move_velocity = clamp(-MAX_MOVEMENT_VEL.value, move_velocity, MAX_MOVEMENT_VEL.value);
 
 	if (input.pressed[InputButtons::UP] && jump_grace_counter > 0) {
-		jump_velocity = -6;
+		jump_velocity = JUMP_VELOCITY;
 		jump_grace_counter = 0;
 	}
 	if (jump_grace_counter > 0) {
@@ -49,11 +54,11 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 
 	if (!on_ground) {
 		if (jump_velocity > 0.f) {
-			jump_velocity += 0.3f;
+			jump_velocity += FALL_GRAVITY;
 		} else if (input.held[InputButtons::UP]) {
-			jump_velocity += 0.25f;
+			jump_velocity += JUMP_HIGH_GRAVITY;
 		} else {
-			jump_velocity += 0.8f;
+			jump_velocity += JUMP_LOW_GRAVITY;
 		}
 	}
 	jump_velocity = clamp(-12.f, jump_velocity, 12.f);
@@ -109,7 +114,7 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 
 	bool new_on_ground = checkCollision(1, pos[1].integer() + size[1]);
 	if (on_ground && !new_on_ground && jump_velocity == 0) {
-		jump_velocity = 2;
+		jump_velocity = LEDGE_FALL_VELOCITY;
 	}
 	on_ground = new_on_ground;
 	if (on_ground) {
