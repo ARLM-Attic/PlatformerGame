@@ -15,16 +15,20 @@ void Player::init(const SpriteDb& sprite_db) {
 	facing_direction = 1;
 	move_velocity = 0.f;
 	jump_velocity = 0.f;
+	jump_grace_counter = 0;
 }
 
 void Player::update(GameState& game_state, const InputButtons& input) {
-	static const float max_movement_vel = 2.5;
+	static const float max_movement_vel = 2.25f;
 	static const float movement_vel_accel = 0.15f;
 
 	vec2 displacement = vec2_0;
 
+	if ((!input.held[InputButtons::LEFT] && move_velocity < 0) || (!input.held[InputButtons::RIGHT] && move_velocity > 0)) {
+		move_velocity = stepTowards(move_velocity, 0.f, on_ground ? 0.2f : 0.1f);
+	}
+
 	if (input.held[InputButtons::LEFT] == input.held[InputButtons::RIGHT]) {
-		move_velocity = stepTowards(move_velocity, 0.f, 0.1f);
 	} else if (input.held[InputButtons::LEFT]) {
 		move_velocity -= movement_vel_accel;
 		facing_direction = -1;
