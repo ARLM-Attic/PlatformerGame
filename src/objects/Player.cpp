@@ -35,18 +35,19 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 	move_velocity = clamp(-max_movement_vel, move_velocity, max_movement_vel);
 
 	if (input.pressed[InputButtons::UP] && on_ground) {
-		jump_velocity = -6;
+		jump_velocity = -5;
 	}
-	/*
-	if (input.at(InputButtons::DOWN)) {
-		vel.y += movement_speed;
-	}
-	*/
 
 	if (!on_ground) {
-		jump_velocity += 0.2f;
+		if (jump_velocity > 0.f) {
+			jump_velocity += 0.2f;
+		} else if (input.held[InputButtons::UP]) {
+			jump_velocity += 0.2f;
+		} else {
+			jump_velocity += 0.6f;
+		}
 	}
-	jump_velocity = clamp(-16.f, jump_velocity, 16.f);
+	jump_velocity = clamp(-8.f, jump_velocity, 8.f);
 
 	displacement.x += move_velocity;
 	displacement.y += jump_velocity;
@@ -81,7 +82,11 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 				if (d == 0) {
 					move_velocity = 0.f;
 				} else if (d == 1) {
-					jump_velocity = 0.f;
+					if (jump_velocity > 0) {
+						jump_velocity = 0;
+					} else if (jump_velocity < -1) {
+						jump_velocity = -1;
+					}
 				}
 
 				if (displacement[d] < 0.f) {
@@ -93,7 +98,11 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 		}
 	}
 
-	on_ground = checkCollision(1, pos[1].integer() + size[1]);
+	bool new_on_ground = checkCollision(1, pos[1].integer() + size[1]);
+	if (on_ground && !new_on_ground && jump_velocity == 0) {
+		jump_velocity = 2;
+	}
+	on_ground = new_on_ground;
 }
 
 void Player::draw(SpriteBuffer& buffer, const Camera& camera) const {
