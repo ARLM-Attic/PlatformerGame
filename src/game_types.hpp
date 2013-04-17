@@ -9,6 +9,12 @@ struct InputButtons {
 		UP,
 		DOWN,
 		SHOOT,
+
+		DEBUG_UP,
+		DEBUG_DOWN,
+		DEBUG_LEFT,
+		DEBUG_RIGHT,
+		DEBUG_ENTER,
 		MAX
 	};
 

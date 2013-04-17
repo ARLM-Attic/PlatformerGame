@@ -80,6 +80,8 @@
   <ItemGroup>
     <ClCompile Include="libs\src\stb_image.c" />
     <ClCompile Include="libs\src\stb_image_write.c" />
+    <ClCompile Include="src\debug\DebugConstant.cpp" />
+    <ClCompile Include="src\debug\DebugMenu.cpp" />
     <ClCompile Include="src\hud.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\objects\BackgroundLayer.cpp" />
@@ -103,6 +105,8 @@
     <ClInclude Include="libs\include\GL\glfw.h" />
     <ClInclude Include="libs\include\stb_image.h" />
     <ClInclude Include="libs\include\stb_image_write.h" />
+    <ClInclude Include="src\debug\DebugConstant.hpp" />
+    <ClInclude Include="src\debug\DebugMenu.hpp" />
     <ClInclude Include="src\hud.hpp" />
     <ClInclude Include="src\objects\BackgroundLayer.hpp" />
     <ClInclude Include="src\objects\Camera.hpp" />

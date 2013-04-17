@@ -6,6 +6,10 @@
 #include "Camera.hpp"
 #include "game_types.hpp"
 #include <iostream>
+#include "debug/DebugConstant.hpp"
+
+DebugConstant<float> max_movement_vel(2.25f, "Max move");
+DebugConstant<float> movement_vel_accel(0.15f, "Move accel");
 
 void Player::init(const SpriteDb& sprite_db) {
 	image = sprite_db.lookup("player_stand");
@@ -19,9 +23,6 @@ void Player::init(const SpriteDb& sprite_db) {
 }
 
 void Player::update(GameState& game_state, const InputButtons& input) {
-	static const float max_movement_vel = 2.25f;
-	static const float movement_vel_accel = 0.15f;
-
 	vec2 displacement = vec2_0;
 
 	if ((!input.held[InputButtons::LEFT] && move_velocity < 0) || (!input.held[InputButtons::RIGHT] && move_velocity > 0)) {
@@ -36,7 +37,7 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 		move_velocity += movement_vel_accel;
 		facing_direction = 1;
 	}
-	move_velocity = clamp(-max_movement_vel, move_velocity, max_movement_vel);
+	move_velocity = clamp(-max_movement_vel.value, move_velocity, max_movement_vel.value);
 
 	if (input.pressed[InputButtons::UP] && jump_grace_counter > 0) {
 		jump_velocity = -6;

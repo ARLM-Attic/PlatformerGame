@@ -28,6 +28,7 @@
 #include "hud.hpp"
 #include "tools/tools_main.hpp"
 #include "Map.hpp"
+#include "debug/DebugMenu.hpp"
 
 std::string formatFrametimeFloat(double x) {
 	std::ostringstream ss;
@@ -58,6 +59,8 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 		drawString(WINDOW_WIDTH, 3*8, max_text, draw_state.ui_buffer, ui_font, TextAlignment::right, color_white);
 	}
 
+	drawDebugMenu(draw_state.ui_buffer, ui_font);
+
 	/* Submit sprites */
 	glClear(GL_COLOR_BUFFER_BIT);
 	draw_state.tileset_buffer.draw(draw_state.sprite_buffer_indices);
@@ -74,6 +77,13 @@ void updateScene(GameState& game_state) {
 	input.held.set(InputButtons::UP, glfwGetKey(GLFW_KEY_UP) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT));
 	input.held.set(InputButtons::DOWN, glfwGetKey(GLFW_KEY_DOWN) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT));
 	input.held.set(InputButtons::SHOOT, glfwGetKey('X') || glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE));
+
+	input.held.set(InputButtons::DEBUG_LEFT, glfwGetKey(GLFW_KEY_KP_4) == GL_TRUE);
+	input.held.set(InputButtons::DEBUG_RIGHT, glfwGetKey(GLFW_KEY_KP_6) == GL_TRUE);
+	input.held.set(InputButtons::DEBUG_UP, glfwGetKey(GLFW_KEY_KP_8) == GL_TRUE);
+	input.held.set(InputButtons::DEBUG_DOWN, glfwGetKey(GLFW_KEY_KP_2) == GL_TRUE);
+	input.held.set(InputButtons::DEBUG_ENTER, glfwGetKey(GLFW_KEY_KP_ENTER) == GL_TRUE);
+
 	input.pressed = ~previous_held & input.held;
 	input.released = previous_held & ~input.held;
 	//input.set(InputButtons::RIGHT, true);
@@ -91,6 +101,8 @@ void updateScene(GameState& game_state) {
 	vec2 force = -k * displacement - b * (game_state.camera.velocity - player_velocity);
 	game_state.camera.velocity = game_state.camera.velocity + force;
 	game_state.camera.pos = game_state.camera.pos + game_state.camera.velocity;
+
+	updateDebugMenu(input);
 }
 
 int main(int argc, const char* argv[]) {
