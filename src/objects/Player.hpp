@@ -17,6 +17,7 @@ struct Player {
 	int facing_direction;
 	float move_velocity;
 	float jump_velocity;
+	int jump_grace_counter;
 
 	IntRect image;
 

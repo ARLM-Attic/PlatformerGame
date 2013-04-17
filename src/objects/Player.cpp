@@ -38,8 +38,12 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 	}
 	move_velocity = clamp(-max_movement_vel, move_velocity, max_movement_vel);
 
-	if (input.pressed[InputButtons::UP] && on_ground) {
+	if (input.pressed[InputButtons::UP] && jump_grace_counter > 0) {
 		jump_velocity = -5;
+		jump_grace_counter = 0;
+	}
+	if (jump_grace_counter > 0) {
+		jump_grace_counter--;
 	}
 
 	if (!on_ground) {
@@ -107,6 +111,9 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 		jump_velocity = 2;
 	}
 	on_ground = new_on_ground;
+	if (on_ground) {
+		jump_grace_counter = 2;
+	}
 }
 
 void Player::draw(SpriteBuffer& buffer, const Camera& camera) const {
