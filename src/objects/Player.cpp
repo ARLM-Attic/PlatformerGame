@@ -39,7 +39,7 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 	move_velocity = clamp(-max_movement_vel, move_velocity, max_movement_vel);
 
 	if (input.pressed[InputButtons::UP] && jump_grace_counter > 0) {
-		jump_velocity = -5;
+		jump_velocity = -6;
 		jump_grace_counter = 0;
 	}
 	if (jump_grace_counter > 0) {
@@ -48,14 +48,14 @@ void Player::update(GameState& game_state, const InputButtons& input) {
 
 	if (!on_ground) {
 		if (jump_velocity > 0.f) {
-			jump_velocity += 0.2f;
+			jump_velocity += 0.3f;
 		} else if (input.held[InputButtons::UP]) {
-			jump_velocity += 0.2f;
+			jump_velocity += 0.25f;
 		} else {
-			jump_velocity += 0.6f;
+			jump_velocity += 0.8f;
 		}
 	}
-	jump_velocity = clamp(-8.f, jump_velocity, 8.f);
+	jump_velocity = clamp(-12.f, jump_velocity, 12.f);
 
 	displacement.x += move_velocity;
 	displacement.y += jump_velocity;
