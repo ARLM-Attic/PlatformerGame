@@ -43,7 +43,7 @@ void drawDebugMenu(SpriteBuffer& ui_buffer, const FontInfo& font_info) {
 
 		char cursor_char = selected_entry == p ? 0x6C : ' ';
 
-		std::string entry_text = std::string(1, scroll_char) + std::string(1, cursor_char) + toUpper(std::string(p->name)) + ": " + p->toString_();
+		std::string entry_text = std::string(1, scroll_char) + std::string(1, cursor_char) + toUpper(std::string(p->name)) + ": " + toUpper(p->toString_());
 		drawString(0, y*font_info.char_h, entry_text, ui_buffer, font_info, TextAlignment::left, color_white);
 		y++;
 	}

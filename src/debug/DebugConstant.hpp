@@ -6,6 +6,11 @@ void increment(float& value);
 void decrement(float& value);
 bool tryParse(float& value, const std::string& str);
 
+std::string toString(bool value);
+void increment(bool& value);
+void decrement(bool& value);
+bool tryParse(bool& value, const std::string& str);
+
 struct DebugConstantBase;
 extern DebugConstantBase* debug_constant_list_head;
 extern DebugConstantBase* debug_constant_list_tail;

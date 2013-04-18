@@ -24,3 +24,27 @@ bool tryParse(float& value, const std::string& str) {
 		return false;
 	}
 }
+
+std::string toString(bool value) {
+	return value ? "true" : "false";
+}
+
+void increment(bool& value) {
+	value = true;
+}
+
+void decrement(bool& value) {
+	value = false;
+}
+
+bool tryParse(bool& value, const std::string& str) {
+	if (str == "1" || str == "true") {
+		value = true;
+		return true;
+	} else if (str == "0" || str == "false") {
+		value = false;
+		return true;
+	} else {
+		return false;
+	}
+}
