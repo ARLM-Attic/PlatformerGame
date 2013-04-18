@@ -68,6 +68,16 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	draw_state.ui_buffer.draw(draw_state.sprite_buffer_indices);
 }
 
+void cameraSpring(const Player& player, Camera& camera) {
+	vec2 displacement = vector_cast<float>(camera.pos.integer() - (player.pos.integer() + (player.size / 2) + mivec2(player.facing_direction * (WINDOW_WIDTH / 6), 0)));
+	float k = 0.001f;
+	float b = 2.f * std::sqrt(k);
+	vec2 player_velocity = { player.move_velocity, player.jump_velocity };
+	vec2 force = -k * displacement - b * (camera.velocity - player_velocity);
+	camera.velocity = camera.velocity + force;
+	camera.pos = camera.pos + camera.velocity;
+}
+
 void readInput(InputButtons& input) {
 	InputButtons::Bitset previous_held = input.held;
 
@@ -95,13 +105,7 @@ void updateScene(GameState& game_state) {
 	readInput(game_state.input);
 	game_state.player.update(game_state);
 
-	vec2 displacement = vector_cast<float>(game_state.camera.pos.integer() - (game_state.player.pos.integer() + (game_state.player.size / 2) + mivec2(game_state.player.facing_direction * (WINDOW_WIDTH / 6), 0)));
-	float k = 0.001f;
-	float b = 2.f * std::sqrt(k);
-	vec2 player_velocity = { game_state.player.move_velocity, game_state.player.jump_velocity };
-	vec2 force = -k * displacement - b * (game_state.camera.velocity - player_velocity);
-	game_state.camera.velocity = game_state.camera.velocity + force;
-	game_state.camera.pos = game_state.camera.pos + game_state.camera.velocity;
+	cameraSpring(game_state.player, game_state.camera);
 
 	updateDebugMenu(game_state.input);
 }
