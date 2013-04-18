@@ -9,11 +9,11 @@ struct Camera {
 	Position pos;
 	vec2 velocity;
 
-	inline vec2 transform(const ivec2& obj_pos) const {
-		return vector_cast<float>(obj_pos - pos.integer()) + mvec2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f);
+	inline ivec2 transform(const ivec2& obj_pos) const {
+		return (obj_pos - pos.integer()) + mivec2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	}
 
-	inline ivec2 inverse_transform(const vec2 screen_pos) const {
-		return pos.integer() + vector_cast<int>(screen_pos - mvec2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
+	inline ivec2 inverse_transform(const ivec2 screen_pos) const {
+		return pos.integer() + (screen_pos - mivec2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
 	}
 };

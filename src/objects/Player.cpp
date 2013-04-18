@@ -126,6 +126,6 @@ void Player::update(GameState& game_state) {
 void Player::draw(SpriteBuffer& buffer, const Camera& camera) const {
 	Sprite spr;
 	spr.img = image;
-	spr.setPos(camera.transform(pos.integer() + mivec2(-8, 0)));
+	spr.pos = camera.transform(pos.integer() + mivec2(-8, 0));
 	buffer.append(spr);
 }

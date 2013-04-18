@@ -20,7 +20,7 @@ void drawString(int x, int y, const std::string& text, SpriteBuffer& buffer, con
 		spr.img.x = font.img_x + grid_col * font.char_w;
 		spr.img.y = font.img_y + grid_line * font.char_h;
 		buffer.append(spr);
-		spr.x += font.char_w;
+		spr.pos.x += font.char_w;
 	}
 }
 

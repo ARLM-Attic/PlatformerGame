@@ -143,21 +143,21 @@ void SpriteBuffer::append(const Sprite& spr) {
 	v.color[2] = spr.color.b;
 	v.color[3] = spr.color.a;
 
-	v.pos_x = static_cast<float>(spr.x);
-	v.pos_y = static_cast<float>(spr.y);
+	v.pos_x = static_cast<float>(spr.pos.x);
+	v.pos_y = static_cast<float>(spr.pos.y);
 	v.tex_s = img_x;
 	v.tex_t = img_y;
 	vertices.push_back(v);
 
-	v.pos_x = static_cast<float>(spr.x + spr.img.w);
+	v.pos_x = static_cast<float>(spr.pos.x + spr.img.w);
 	v.tex_s = img_x + img_w;
 	vertices.push_back(v);
 
-	v.pos_y = static_cast<float>(spr.y + spr.img.h);
+	v.pos_y = static_cast<float>(spr.pos.y + spr.img.h);
 	v.tex_t = img_y + img_h;
 	vertices.push_back(v);
 
-	v.pos_x = static_cast<float>(spr.x);
+	v.pos_x = static_cast<float>(spr.pos.x);
 	v.tex_s = img_x;
 	vertices.push_back(v);
 
@@ -184,24 +184,24 @@ void SpriteBuffer::append(const Sprite& spr, const SpriteMatrix& matrix) {
 	float m2x = matrix.m[2] * x;
 	float m3y = matrix.m[3] * y;
 
-	v.pos_x = spr.x - m0x - m1y;
-	v.pos_y = spr.y - m2x - m3y;
+	v.pos_x = spr.pos.x - m0x - m1y;
+	v.pos_y = spr.pos.y - m2x - m3y;
 	v.tex_s = img_x;
 	v.tex_t = img_y;
 	vertices.push_back(v);
 
-	v.pos_x = spr.x + m0x - m1y;
-	v.pos_y = spr.y + m2x - m3y;
+	v.pos_x = spr.pos.x + m0x - m1y;
+	v.pos_y = spr.pos.y + m2x - m3y;
 	v.tex_s = img_x + img_w;
 	vertices.push_back(v);
 
-	v.pos_x = spr.x + m0x + m1y;
-	v.pos_y = spr.y + m2x + m3y;
+	v.pos_x = spr.pos.x + m0x + m1y;
+	v.pos_y = spr.pos.y + m2x + m3y;
 	v.tex_t = img_y + img_h;
 	vertices.push_back(v);
 
-	v.pos_x = spr.x - m0x + m1y;
-	v.pos_y = spr.y - m2x + m3y;
+	v.pos_x = spr.pos.x - m0x + m1y;
+	v.pos_y = spr.pos.y - m2x + m3y;
 	v.tex_s = img_x;
 	vertices.push_back(v);
 

@@ -28,6 +28,6 @@ Map loadMap(const std::string& filename);
 void drawTilemap(
 	const Map& map, SpriteBuffer& buffer,
 	const int tile_w, const int tile_h, const int tiles_per_row,
-	const vec2 screen_pos,
+	const ivec2 screen_pos,
 	const int map_xoffset, const int map_yoffset,
 	int map_wtiles, int map_htiles);

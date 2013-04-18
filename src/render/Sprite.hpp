@@ -21,7 +21,7 @@ struct IntRect {
 };
 
 struct Sprite {
-	int x, y;
+	ivec2 pos;
 	IntRect img;
 	Color color;
 
@@ -36,12 +36,11 @@ struct Sprite {
 	}
 
 	void setPos(int x_, int y_) {
-		x = x_; y = y_;
+		pos.x = x_; pos.y = y_;
 	}
 
 	void setPos(const vec2 v) {
-		x = static_cast<int>(v.x);
-		y = static_cast<int>(v.y);
+		pos = vector_cast<int>(v);
 	}
 };
 

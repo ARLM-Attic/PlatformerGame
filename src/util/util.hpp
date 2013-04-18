@@ -73,3 +73,8 @@ inline void intDiv(float x, float y, int& result, float& remainder) {
 	result = int(x / y);
 	remainder = x - int(x / y) * y;
 }
+
+inline void intDiv(int x, int y, int& result, int& remainder) {
+	result = x / y;
+	remainder = x % y;
+}
