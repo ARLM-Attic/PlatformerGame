@@ -10,11 +10,11 @@
 
 static DebugConstant<float> MAX_MOVEMENT_VEL(2.25f, "Max move");
 static DebugConstant<float> MOVEMENT_VEL_ACCEL(0.15f, "Move accel");
-static DebugConstant<float> JUMP_VELOCITY(-6, "Jump vel");
-static DebugConstant<float> FALL_GRAVITY(0.3f, "Fall grav");
+static DebugConstant<float> JUMP_VELOCITY(-5.6f, "Jump vel");
+static DebugConstant<float> FALL_GRAVITY(0.25f, "Fall grav");
 static DebugConstant<float> JUMP_HIGH_GRAVITY(0.25f, "Jump high grav");
 static DebugConstant<float> JUMP_LOW_GRAVITY(0.8f, "Jump low grav");
-static DebugConstant<float> LEDGE_FALL_VELOCITY(2, "Ledge fall vel");
+static DebugConstant<float> LEDGE_FALL_VELOCITY(1, "Ledge fall vel");
 
 void Player::init(const SpriteDb& sprite_db) {
 	image = sprite_db.lookup("player_stand");
