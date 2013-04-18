@@ -36,6 +36,18 @@ std::string formatFrametimeFloat(double x) {
 	return ss.str();
 }
 
+void drawFrametime(const GameState& game_state, SpriteBuffer& ui_buffer) {
+	const std::string fps_text = "FPS: " + formatFrametimeFloat(game_state.fps);
+	const std::string min_text = "MIN: " + formatFrametimeFloat(game_state.frametime_min * 1000.0f);
+	const std::string avg_text = "AVG: " + formatFrametimeFloat(game_state.frametime_avg * 1000.0f);
+	const std::string max_text = "MAX: " + formatFrametimeFloat(game_state.frametime_max * 1000.0f);
+
+	drawString(WINDOW_WIDTH, 0*8, fps_text, ui_buffer, ui_font, TextAlignment::right, color_white);
+	drawString(WINDOW_WIDTH, 1*8, min_text, ui_buffer, ui_font, TextAlignment::right, color_white);
+	drawString(WINDOW_WIDTH, 2*8, avg_text, ui_buffer, ui_font, TextAlignment::right, color_white);
+	drawString(WINDOW_WIDTH, 3*8, max_text, ui_buffer, ui_font, TextAlignment::right, color_white);
+}
+
 void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
 	draw_state.tileset_buffer.clear();
@@ -46,18 +58,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 
 	game_state.player.draw(draw_state.characters_buffer, game_state.camera);
 
-	/* Draw FPS */
-	{
-		const std::string fps_text = "FPS: " + formatFrametimeFloat(game_state.fps);
-		const std::string min_text = "MIN: " + formatFrametimeFloat(game_state.frametime_min * 1000.0f);
-		const std::string avg_text = "AVG: " + formatFrametimeFloat(game_state.frametime_avg * 1000.0f);
-		const std::string max_text = "MAX: " + formatFrametimeFloat(game_state.frametime_max * 1000.0f);
-
-		drawString(WINDOW_WIDTH, 0*8, fps_text, draw_state.ui_buffer, ui_font, TextAlignment::right, color_white);
-		drawString(WINDOW_WIDTH, 1*8, min_text, draw_state.ui_buffer, ui_font, TextAlignment::right, color_white);
-		drawString(WINDOW_WIDTH, 2*8, avg_text, draw_state.ui_buffer, ui_font, TextAlignment::right, color_white);
-		drawString(WINDOW_WIDTH, 3*8, max_text, draw_state.ui_buffer, ui_font, TextAlignment::right, color_white);
-	}
+	drawFrametime(game_state, draw_state.ui_buffer);
 
 	drawDebugMenu(draw_state.ui_buffer, ui_font);
 
