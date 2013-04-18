@@ -1,5 +1,5 @@
 #pragma once
-#include "util/Fixed.hpp"
+#include "util/vec2.hpp"
 #include <bitset>
 
 struct InputButtons {
@@ -23,4 +23,6 @@ struct InputButtons {
 	Bitset pressed;
 	Bitset held;
 	Bitset released;
+
+	ivec2 mouse_pos;
 };

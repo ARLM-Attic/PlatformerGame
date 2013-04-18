@@ -27,7 +27,8 @@ void Player::init(const SpriteDb& sprite_db) {
 	jump_grace_counter = 0;
 }
 
-void Player::update(GameState& game_state, const InputButtons& input) {
+void Player::update(GameState& game_state) {
+	const InputButtons& input = game_state.input;
 	vec2 displacement = vec2_0;
 
 	if ((!input.held[InputButtons::LEFT] && move_velocity < 0) || (!input.held[InputButtons::RIGHT] && move_velocity > 0)) {

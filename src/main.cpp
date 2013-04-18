@@ -68,15 +68,14 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	draw_state.ui_buffer.draw(draw_state.sprite_buffer_indices);
 }
 
-void updateScene(GameState& game_state) {
-	InputButtons& input = game_state.input;
+void readInput(InputButtons& input) {
 	InputButtons::Bitset previous_held = input.held;
 
 	input.held.set(InputButtons::LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
 	input.held.set(InputButtons::RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
-	input.held.set(InputButtons::UP, glfwGetKey(GLFW_KEY_UP) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT));
-	input.held.set(InputButtons::DOWN, glfwGetKey(GLFW_KEY_DOWN) || glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT));
-	input.held.set(InputButtons::SHOOT, glfwGetKey('X') || glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE));
+	input.held.set(InputButtons::UP, glfwGetKey(GLFW_KEY_UP) == GL_TRUE);
+	input.held.set(InputButtons::DOWN, glfwGetKey(GLFW_KEY_DOWN) == GL_TRUE);
+	input.held.set(InputButtons::SHOOT, glfwGetKey('X') == GL_TRUE);
 
 	input.held.set(InputButtons::DEBUG_LEFT, glfwGetKey(GLFW_KEY_KP_4) == GL_TRUE);
 	input.held.set(InputButtons::DEBUG_RIGHT, glfwGetKey(GLFW_KEY_KP_6) == GL_TRUE);
@@ -86,13 +85,15 @@ void updateScene(GameState& game_state) {
 
 	input.pressed = ~previous_held & input.held;
 	input.released = previous_held & ~input.held;
-	//input.set(InputButtons::RIGHT, true);
-	//glfwGetMousePos(&game_state.mouse_x, &game_state.mouse_y);
-	//game_state.mouse_x = clamp(0, game_state.mouse_x, WINDOW_WIDTH-1);
-	//game_state.mouse_y = clamp(0, game_state.mouse_y, WINDOW_HEIGHT-1);
-	//glfwSetMousePos(game_state.mouse_x, game_state.mouse_y);
 
-	game_state.player.update(game_state, input);
+	glfwGetMousePos(&input.mouse_pos.x, &input.mouse_pos.y);
+	input.mouse_pos.x = clamp(0, input.mouse_pos.x, WINDOW_WIDTH-1);
+	input.mouse_pos.y = clamp(0, input.mouse_pos.y, WINDOW_HEIGHT-1);
+}
+
+void updateScene(GameState& game_state) {
+	readInput(game_state.input);
+	game_state.player.update(game_state);
 
 	vec2 displacement = vector_cast<float>(game_state.camera.pos.integer() - (game_state.player.pos.integer() + (game_state.player.size / 2) + mivec2(game_state.player.facing_direction * (WINDOW_WIDTH / 6), 0)));
 	float k = 0.001f;
@@ -102,7 +103,7 @@ void updateScene(GameState& game_state) {
 	game_state.camera.velocity = game_state.camera.velocity + force;
 	game_state.camera.pos = game_state.camera.pos + game_state.camera.velocity;
 
-	updateDebugMenu(input);
+	updateDebugMenu(game_state.input);
 }
 
 int main(int argc, const char* argv[]) {

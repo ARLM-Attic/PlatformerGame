@@ -10,7 +10,6 @@
 struct GameState {
 	RandomGenerator rng;
 	InputButtons input;
-	int mouse_x, mouse_y;
 	Camera camera;
 
 	BackgroundLayer player_layer;

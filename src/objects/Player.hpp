@@ -22,6 +22,6 @@ struct Player {
 	IntRect image;
 
 	void init(const SpriteDb& sprite_db);
-	void update(GameState& game_state, const InputButtons& input);
+	void update(GameState& game_state);
 	void draw(SpriteBuffer& buffer, const Camera& camera) const;
 };
