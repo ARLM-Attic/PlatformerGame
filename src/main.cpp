@@ -29,6 +29,7 @@
 #include "tools/tools_main.hpp"
 #include "Map.hpp"
 #include "debug/DebugMenu.hpp"
+#include "debug/Editor.hpp"
 
 std::string formatFrametimeFloat(double x) {
 	std::ostringstream ss;
@@ -61,6 +62,9 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	drawFrametime(game_state, draw_state.ui_buffer);
 
 	drawDebugMenu(draw_state.ui_buffer, ui_font);
+	if (editorIsEnabled()) {
+		editorDraw(game_state, draw_state);
+	}
 
 	/* Submit sprites */
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -94,6 +98,14 @@ void readInput(InputButtons& input) {
 	input.held.set(InputButtons::DEBUG_DOWN, glfwGetKey(GLFW_KEY_KP_2) == GL_TRUE);
 	input.held.set(InputButtons::DEBUG_ENTER, glfwGetKey(GLFW_KEY_KP_ENTER) == GL_TRUE);
 
+	input.held.set(InputButtons::EDITOR_TOGGLE, glfwGetKey('`') == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_PICK_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT) == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_PLACE_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_SCROLL_LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_SCROLL_RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_SCROLL_UP, glfwGetKey(GLFW_KEY_UP) == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_SCROLL_DOWN, glfwGetKey(GLFW_KEY_DOWN) == GL_TRUE);
+
 	input.pressed = ~previous_held & input.held;
 	input.released = previous_held & ~input.held;
 
@@ -104,9 +116,13 @@ void readInput(InputButtons& input) {
 
 void updateScene(GameState& game_state) {
 	readInput(game_state.input);
-	game_state.player.update(game_state);
 
-	cameraSpring(game_state.player, game_state.camera);
+	if (editorIsEnabled()) {
+		editorUpdate(game_state);
+	} else {
+		game_state.player.update(game_state);
+		cameraSpring(game_state.player, game_state.camera);
+	}
 
 	updateDebugMenu(game_state.input);
 }
@@ -180,7 +196,8 @@ int main(int argc, const char* argv[]) {
 
 	game_state.camera.pos = game_state.player.pos;
 	game_state.camera.velocity = vec2_0;
-
+	
+	editorInit();
 
 	////////////////////
 	// Main game loop //

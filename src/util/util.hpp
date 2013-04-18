@@ -78,3 +78,8 @@ inline void intDiv(int x, int y, int& result, int& remainder) {
 	result = x / y;
 	remainder = x % y;
 }
+
+template <typename T>
+T intRoundTo(T value, T mod) {
+	return value / mod * mod;
+}

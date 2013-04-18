@@ -22,6 +22,12 @@ struct Map {
 		}
 		return data[y * width + x];
 	}
+
+	void set(int x, int y, uint16_t tile_id) {
+		if (x >= 0 && y >= 0 && x < width && y < height) {
+			data[y * width + x] = tile_id;
+		}
+	}
 };
 
 Map loadMap(const std::string& filename);

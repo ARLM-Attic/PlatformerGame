@@ -27,3 +27,12 @@ ivec2 BackgroundLayer::getTilePosAt(ivec2 world_pos) const {
 		(world_pos.x - position.x) / tile_size[0],
 		(world_pos.y - position.y) / tile_size[1]);
 }
+
+IntRect BackgroundLayer::getTileImgRect(uint16_t tile_id) const {
+	IntRect r;
+	r.x = tile_id % tiles_per_row * tile_size[0];
+	r.y = tile_id / tiles_per_row * tile_size[1];
+	r.w = tile_size[0];
+	r.h = tile_size[1];
+	return r;
+}
