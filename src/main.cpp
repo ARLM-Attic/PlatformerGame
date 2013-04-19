@@ -61,7 +61,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 
 		Sprite spr;
 		spr.img = sprite.image;
-		spr.pos = pos->position - sprite.origin;
+		spr.pos = game_state.camera.transform(pos->position) - sprite.origin;
 		draw_state.sprite_buffers[sprite.layer].append(spr);
 	}
 
