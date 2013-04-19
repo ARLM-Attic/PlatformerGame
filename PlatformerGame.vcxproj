@@ -496,6 +496,7 @@
     <ClInclude Include="libs\include\GL\glfw.h" />
     <ClInclude Include="libs\include\stb_image.h" />
     <ClInclude Include="libs\include\stb_image_write.h" />
+    <ClInclude Include="src\components\PositionComponent.hpp" />
     <ClInclude Include="src\components\SpriteComponent.hpp" />
     <ClInclude Include="src\debug\DebugConstant.hpp" />
     <ClInclude Include="src\debug\DebugMenu.hpp" />

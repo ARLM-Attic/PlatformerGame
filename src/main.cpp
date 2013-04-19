@@ -55,6 +55,16 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 		buffer.clear();
 	}
 
+	for (const SpriteComponent& sprite : game_state.component_manager.component_pool_SpriteComponent) {
+		const PositionComponent* pos = findInChain<PositionComponent>(game_state.component_manager, sprite);
+		assert(pos);
+
+		Sprite spr;
+		spr.img = sprite.image;
+		spr.pos = pos->position - sprite.origin;
+		draw_state.sprite_buffers[sprite.layer].append(spr);
+	}
+
 	game_state.player_layer.draw(draw_state.sprite_buffers[RenderState::LAYER_TILESET], game_state.camera);
 
 	game_state.player.draw(draw_state.sprite_buffers[RenderState::LAYER_CHARACTER], game_state.camera);
@@ -196,6 +206,17 @@ int main(int argc, const char* argv[]) {
 
 	game_state.camera.pos = game_state.player.pos;
 	game_state.camera.velocity = vec2_0;
+
+	{
+		auto pos = game_state.component_manager.createComponent<PositionComponent>();
+		pos->position = mivec2(128, 64);
+		auto spr = game_state.component_manager.createComponent<SpriteComponent>();
+		spr->layer = RenderState::LAYER_CHARACTER;
+		spr->image = draw_state.characters_sprdb.lookup("player_stand");
+		spr->origin = mivec2(spr->image.w / 2, spr->image.h / 2);
+
+		insertInChain(*pos, *spr);
+	}
 	
 	editorInit();
 
