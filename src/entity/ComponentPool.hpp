@@ -3,6 +3,7 @@
 #include "ObjectPool.hpp"
 #include "Component.hpp"
 #include <type_traits>
+#include <cassert>
 
 template <typename T>
 struct ComponentPool : ObjectPool {
@@ -34,7 +35,7 @@ struct ComponentPool : ObjectPool {
 	}
 };
 
-#if 1
+#if 0
 struct FloatComponent : Component {
 	static const uint16_t COMPONENT_ID = 10000;
 

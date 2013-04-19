@@ -2,9 +2,15 @@
 #include "Component.hpp"
 #include <cassert>
 
+ComponentManager::ComponentManager() {
+#define COMPONENT_DEF(id, class_name) component_pools[ComponentId::class_name] = &component_pool_##class_name;
+#include "components/ComponentDefs.inc"
+#undef COMPONENT_DEF
+}
+
 ObjectPool& ComponentManager::getPool(Handle h) {
 	assert(h.type <= ComponentId::NUM_COMPONENTS);
-	return component_pools[h.type];
+	return *(component_pools[h.type]);
 }
 
 Component* ComponentManager::resolve(Handle h) {
