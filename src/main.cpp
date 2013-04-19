@@ -51,26 +51,26 @@ void drawFrametime(const GameState& game_state, SpriteBuffer& ui_buffer) {
 
 void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
-	draw_state.tileset_buffer.clear();
-	draw_state.characters_buffer.clear();
-	draw_state.ui_buffer.clear();
+	for (SpriteBuffer& buffer : draw_state.sprite_buffers) {
+		buffer.clear();
+	}
 
-	game_state.player_layer.draw(draw_state.tileset_buffer, game_state.camera);
+	game_state.player_layer.draw(draw_state.sprite_buffers[RenderState::LAYER_TILESET], game_state.camera);
 
-	game_state.player.draw(draw_state.characters_buffer, game_state.camera);
+	game_state.player.draw(draw_state.sprite_buffers[RenderState::LAYER_CHARACTER], game_state.camera);
 
-	drawFrametime(game_state, draw_state.ui_buffer);
+	drawFrametime(game_state, draw_state.sprite_buffers[RenderState::LAYER_UI]);
 
-	drawDebugMenu(draw_state.ui_buffer, ui_font);
+	drawDebugMenu(draw_state.sprite_buffers[RenderState::LAYER_UI], ui_font);
 	if (editorIsEnabled()) {
 		editorDraw(game_state, draw_state);
 	}
 
 	/* Submit sprites */
 	glClear(GL_COLOR_BUFFER_BIT);
-	draw_state.tileset_buffer.draw(draw_state.sprite_buffer_indices);
-	draw_state.characters_buffer.draw(draw_state.sprite_buffer_indices);
-	draw_state.ui_buffer.draw(draw_state.sprite_buffer_indices);
+	for (const SpriteBuffer& buffer : draw_state.sprite_buffers) {
+		buffer.draw(draw_state.sprite_buffer_indices);
+	}
 }
 
 void cameraSpring(const Player& player, Camera& camera) {
@@ -166,12 +166,12 @@ int main(int argc, const char* argv[]) {
 	RenderState draw_state;
 	CHECK_GL_ERROR;
 
-	draw_state.tileset_buffer.texture = loadTexture("tileset.png");
+	draw_state.sprite_buffers[RenderState::LAYER_TILESET].texture = loadTexture("tileset.png");
 
-	draw_state.characters_buffer.texture = loadTexture("characters.png");
+	draw_state.sprite_buffers[RenderState::LAYER_CHARACTER].texture = loadTexture("characters.png");
 	draw_state.characters_sprdb.loadFromCsv("characters.csv");
 
-	draw_state.ui_buffer.texture = loadTexture("ui_font.png");
+	draw_state.sprite_buffers[RenderState::LAYER_UI].texture = loadTexture("ui_font.png");
 	initUiFont();
 
 	CHECK_GL_ERROR;

@@ -5,11 +5,15 @@
 #include <vector>
 
 struct RenderState {
+	
+	enum SpriteLayer {
+		LAYER_TILESET,
+		LAYER_CHARACTER,
+		LAYER_UI,
+		LAYER_MAX
+	};
+
 	SpriteBufferIndices sprite_buffer_indices;
-	SpriteBuffer tileset_buffer;
-
-	SpriteBuffer characters_buffer;
+	std::array<SpriteBuffer, LAYER_MAX> sprite_buffers;
 	SpriteDb characters_sprdb;
-
-	SpriteBuffer ui_buffer;
 };
