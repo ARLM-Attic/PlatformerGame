@@ -33,6 +33,11 @@ struct ComponentPool : ObjectPool {
 	const T* operator[] (const Handle h) const {
 		return static_cast<const T*>(ObjectPool::operator[](h));
 	}
+
+	T* begin() { return static_cast<T*>(pool.begin()); }
+	T* end() { return static_cast<T*>(pool.end()); }
+	const T* begin() const { return static_cast<const T*>(pool.begin()); }
+	const T* end() const { return static_cast<const T*>(pool.end()); }
 };
 
 #if 0

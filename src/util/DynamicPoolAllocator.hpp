@@ -19,6 +19,11 @@ struct DynamicPoolAllocator {
 	void pop_back();
 	void copy(size_t from, size_t to);
 
+	void* begin() { return data_begin; }
+	void* end() { return data_end; }
+	const void* begin() const { return data_begin; }
+	const void* end() const { return data_end; }
+
 	void* operator [](size_t i);
 	const void* operator [](size_t i) const;
 
