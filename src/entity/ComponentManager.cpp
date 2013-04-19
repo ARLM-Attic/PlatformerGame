@@ -8,13 +8,13 @@ ComponentManager::ComponentManager() {
 #undef COMPONENT_DEF
 }
 
-ObjectPool& ComponentManager::getPool(Handle h) {
+const ObjectPool& ComponentManager::getPool(Handle h) const {
 	assert(h.type <= ComponentId::NUM_COMPONENTS);
 	return *(component_pools[h.type]);
 }
 
-Component* ComponentManager::resolve(Handle h) {
-	return static_cast<Component*>(getPool(h)[h]);
+const Component* ComponentManager::resolve(Handle h) const {
+	return static_cast<const Component*>(getPool(h)[h]);
 }
 
 void ComponentManager::deleteChain(Component* chain) {
