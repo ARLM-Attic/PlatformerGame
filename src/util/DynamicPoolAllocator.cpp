@@ -8,6 +8,28 @@ DynamicPoolAllocator::DynamicPoolAllocator(size_t object_size)
 	data_alloc_end(nullptr)
 {}
 
+DynamicPoolAllocator::DynamicPoolAllocator(const DynamicPoolAllocator& o)
+	: object_size(o.object_size),
+	data_begin(nullptr), data_end(nullptr),
+	data_alloc_end(nullptr)
+{
+	*this = o;
+}
+
+DynamicPoolAllocator::~DynamicPoolAllocator() {
+	delete[] data_begin;
+}
+
+DynamicPoolAllocator& DynamicPoolAllocator::operator =(const DynamicPoolAllocator& o) {
+	delete[] data_begin;
+	data_begin = new uint8_t[o.data_alloc_end - o.data_begin];
+	data_end = data_begin + (o.data_end - o.data_begin);
+	data_alloc_end = data_begin + (o.data_alloc_end - o.data_begin);
+	std::memcpy(data_begin, o.data_begin, o.data_end - o.data_begin);
+
+	return *this;
+}
+
 size_t DynamicPoolAllocator::getObjectSize() const {
 	return object_size;
 }

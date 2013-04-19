@@ -4,6 +4,9 @@
 
 struct DynamicPoolAllocator {
 	DynamicPoolAllocator(size_t object_size);
+	DynamicPoolAllocator(const DynamicPoolAllocator& o);
+	~DynamicPoolAllocator();
+	DynamicPoolAllocator& operator =(const DynamicPoolAllocator& o);
 
 	size_t getObjectSize() const;
 
