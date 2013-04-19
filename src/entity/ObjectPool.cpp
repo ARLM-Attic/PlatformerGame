@@ -75,7 +75,7 @@ const void* ObjectPool::operator[] (const Handle h) const {
 
 /** Checks if object referenced by handle is still in the pool. */
 bool ObjectPool::isValid(const Handle h) const {
-	return h.pool == pool_id && h.index < roster.size() && roster[h.index].generation == h.generation;
+	return h.type == pool_id && h.index < roster.size() && roster[h.index].generation == h.generation;
 }
 
 /** Creates a handle to the object currently at pool[index]. */

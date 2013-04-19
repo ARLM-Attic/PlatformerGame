@@ -3,20 +3,20 @@
 #include <cstdint>
 
 struct Handle {
-	uint16_t pool;
+	uint16_t type;
 	uint16_t index;
 	uint32_t generation;
 
 	Handle()
-		: pool(-1), index(-1), generation(-1)
+		: type(-1), index(-1), generation(-1)
 	{}
 
-	Handle(uint16_t pool, uint16_t index, uint32_t generation)
-		: pool(pool), index(index), generation(generation)
+	Handle(uint16_t type, uint16_t index, uint32_t generation)
+		: type(type), index(index), generation(generation)
 	{}
 
 	bool operator ==(const Handle& o) const {
-		return pool == o.pool && index == o.index && generation == o.generation;
+		return type == o.type && index == o.index && generation == o.generation;
 	}
 
 	bool operator !=(const Handle& o) const {

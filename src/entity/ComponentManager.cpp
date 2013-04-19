@@ -3,8 +3,8 @@
 #include <cassert>
 
 ObjectPool& ComponentManager::getPool(Handle h) {
-	assert(h.pool <= ComponentId::NUM_COMPONENTS);
-	return component_pools[h.pool];
+	assert(h.type <= ComponentId::NUM_COMPONENTS);
+	return component_pools[h.type];
 }
 
 Component* ComponentManager::resolve(Handle h) {
