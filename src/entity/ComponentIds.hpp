@@ -1,11 +1,9 @@
 #pragma once
+#include <cstdint>
 
 namespace ComponentId {
 
-enum ComponentId {
-	TEST = 0,
-	FOO,
-	BAR,
+enum ComponentId : uint16_t {
 	NUM_COMPONENTS
 };
 
