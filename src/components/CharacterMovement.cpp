@@ -24,9 +24,9 @@ void CharacterMovement::init() {
 	jump_grace_counter = 0;
 }
 
-void CharacterMovement::update(ComponentManager& component_manager, const InputButtons& input, const BackgroundLayer& collision_layer) {
-	PositionComponent* pos = findInChain<PositionComponent>(component_manager, *this);
-	const BoundingRect* rect = findInChain<BoundingRect>(component_manager, *this);
+void CharacterMovement::update(const InputButtons& input, const BackgroundLayer& collision_layer) {
+	PositionComponent* pos = findInChain<PositionComponent>(*this);
+	const BoundingRect* rect = findInChain<BoundingRect>(*this);
 
 	vec2 displacement = vec2_0;
 

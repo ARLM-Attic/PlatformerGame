@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Handle.hpp"
+#include "Context.hpp"
 
 struct ComponentManager;
 
@@ -10,37 +11,26 @@ struct Component {
 };
 
 void insertInChain(Component& chain, Component& comp);
-void removeNextFromChain(ComponentManager& manager, Component& comp);
-void removeFromChain(ComponentManager& manager, Component& target);
-Component* findInChain(ComponentManager& manager, Component& chain, uint16_t component_id);
-const Component* findInChain(const ComponentManager& manager, const Component& chain, uint16_t component_id);
+void removeNextFromChain(Component& comp);
+void removeFromChain(Component& chain, Component& target);
+Component* findInChain(const Component& chain, uint16_t component_id);
 
 template <typename T>
-T* findInChain(ComponentManager& manager, Component& chain) {
-	return static_cast<T*>(findInChain(manager, chain, T::COMPONENT_ID));
+T* findInChain(Component& chain) {
+	return static_cast<T*>(findInChain(chain, T::COMPONENT_ID));
 }
 
 template <typename T>
-const T* findInChain(const ComponentManager& manager, const Component& chain) {
-	return static_cast<const T*>(findInChain(manager, chain, T::COMPONENT_ID));
+const T* findInChain(const Component& chain) {
+	return static_cast<const T*>(findInChain(chain, T::COMPONENT_ID));
 }
 
 template <typename T>
-T* findInChain(ComponentManager& manager, Handle chain) {
-	Component* c = manager.resolve(chain);
+T* findInChain(Handle chain) {
+	Component* c = context.component_mgr->resolve(chain);
 	if (!c) {
 		return nullptr;
 	} else {
-		return static_cast<T*>(findInChain(manager, *c, T::COMPONENT_ID));
-	}
-}
-
-template <typename T>
-const T* findInChain(const ComponentManager& manager, Handle chain) {
-	const Component* c = manager.resolve(chain);
-	if (!c) {
-		return nullptr;
-	} else {
-		return static_cast<const T*>(findInChain(manager, *c, T::COMPONENT_ID));
+		return static_cast<T*>(findInChain(*c, T::COMPONENT_ID));
 	}
 }

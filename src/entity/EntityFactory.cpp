@@ -6,7 +6,9 @@
 #include "objects/GameState.hpp"
 #include "Context.hpp"
 
-static Handle create_Player(ComponentManager& manager, const Context& context) {
+static Handle create_Player() {
+	ComponentManager& manager = *context.component_mgr;
+
 	auto& pos = *manager.createComponent<PositionComponent>();
 	pos.position = mivec2(96, 192);
 
@@ -29,13 +31,13 @@ static Handle create_Player(ComponentManager& manager, const Context& context) {
 	return pos.self;
 }
 
-static std::array<Handle (*)(ComponentManager&, const Context&), EntityId::NUM_ENTITIES> entityFactories = {{
+static std::array<Handle (*)(), EntityId::NUM_ENTITIES> entityFactories = {{
 #define ENTITY_DEF(id, name) create_##name,
 #include "EntityDefs.inc"
 #undef ENTITY_DEF
 }};
 
-Handle createEntity(ComponentManager& manager, const Context& context, uint16_t entity_id) {
+Handle createEntity(uint16_t entity_id) {
 	assert(entity_id < EntityId::NUM_ENTITIES);
-	return entityFactories[entity_id](manager, context);
+	return entityFactories[entity_id]();
 }

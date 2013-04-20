@@ -34,6 +34,8 @@
 #include "entity/EntityIds.hpp"
 #include "Context.hpp"
 
+Context context;
+
 std::string formatFrametimeFloat(double x) {
 	std::ostringstream ss;
 	ss << std::fixed << std::setprecision(3) << x;
@@ -59,7 +61,7 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	}
 
 	for (const SpriteComponent& sprite : game_state.component_manager.component_pool_SpriteComponent) {
-		const PositionComponent* pos = findInChain<PositionComponent>(game_state.component_manager, sprite);
+		const PositionComponent* pos = findInChain<PositionComponent>(sprite);
 		assert(pos);
 
 		Sprite spr;
@@ -84,10 +86,10 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	}
 }
 
-void cameraSpring(const ComponentManager& manager, const Handle player, Camera& camera) {
-	const ivec2 player_pos = findInChain<PositionComponent>(manager, player)->position;
-	const ivec2 player_size = findInChain<BoundingRect>(manager, player)->size;
-	const CharacterMovement& movement = *findInChain<CharacterMovement>(manager, player);
+void cameraSpring(const Handle player, Camera& camera) {
+	const ivec2 player_pos = findInChain<PositionComponent>(player)->position;
+	const ivec2 player_size = findInChain<BoundingRect>(player)->size;
+	const CharacterMovement& movement = *findInChain<CharacterMovement>(player);
 
 	vec2 displacement = vector_cast<float>(camera.pos.integer() - (player_pos + (player_size / 2) + mivec2(movement.facing_direction * (WINDOW_WIDTH / 6), 0)));
 	float k = 0.001f;
@@ -136,9 +138,9 @@ void updateScene(GameState& game_state) {
 		editorUpdate(game_state);
 	} else {
 		for (CharacterMovement& movement : game_state.component_manager.component_pool_CharacterMovement) {
-			movement.update(game_state.component_manager, game_state.input, game_state.player_layer);
+			movement.update(game_state.input, game_state.player_layer);
 		}
-		cameraSpring(game_state.component_manager, game_state.player, game_state.camera);
+		cameraSpring(game_state.player, game_state.camera);
 	}
 
 	updateDebugMenu(game_state.input);
@@ -198,9 +200,9 @@ int main(int argc, const char* argv[]) {
 	///////////////////////////
 	GameState game_state;
 
-	Context context;
 	context.game_state = &game_state;
 	context.render_state = &draw_state;
+	context.component_mgr = &game_state.component_manager;
 
 	game_state.rng.seed(1235);
 
@@ -212,9 +214,9 @@ int main(int argc, const char* argv[]) {
 		l.position = mivec2(0, 0);
 	}
 
-	game_state.player = createEntity(game_state.component_manager, context, EntityId::Player);
+	game_state.player = createEntity(EntityId::Player);
 
-	game_state.camera.pos = mPosition(findInChain<PositionComponent>(game_state.component_manager, game_state.player)->position);
+	game_state.camera.pos = mPosition(findInChain<PositionComponent>(game_state.player)->position);
 	game_state.camera.velocity = vec2_0;
 	
 	editorInit();

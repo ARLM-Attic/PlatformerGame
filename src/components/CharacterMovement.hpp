@@ -17,5 +17,5 @@ struct CharacterMovement : Component {
 	int jump_grace_counter;
 
 	void init();
-	void update(ComponentManager& component_manager, const InputButtons& input, const BackgroundLayer& collision_layer);
+	void update(const InputButtons& input, const BackgroundLayer& collision_layer);
 };
