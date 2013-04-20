@@ -66,5 +66,5 @@ void editorDraw(const GameState& game_state, RenderState& render_state) {
 
 	boost::format status_text_fmt("%1% - X: %2% Y: %3%");
 	std::string status_text = (status_text_fmt % "TILES" % editor_state.mouse_coords.x % editor_state.mouse_coords.y).str();
-	drawString(0, WINDOW_HEIGHT - ui_font.char_h, status_text, render_state.sprite_buffers[RenderState::LAYER_TILESET], ui_font, TextAlignment::left, color_white);
+	drawString(0, WINDOW_HEIGHT - ui_font.char_h, status_text, render_state.sprite_buffers[RenderState::LAYER_UI], ui_font, TextAlignment::left, color_white);
 }
