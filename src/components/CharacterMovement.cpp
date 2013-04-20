@@ -83,7 +83,7 @@ void CharacterMovement::update(const InputButtons& input, const BackgroundLayer&
 
 	for (int d = 0; d < 2; ++d) {
 		if (displacement[d] != 0.f) {
-			int pos_tmp = (pos->position[d] << 8) + sub_position[d];
+			int pos_tmp = (pos->position[d] << 8) | (sub_position[d] & 0xFF);
 			pos_tmp += (int)(displacement[d] * 256.f);
 			pos->position[d] = pos_tmp >> 8;
 			sub_position[d] = pos_tmp & 0xFF;
