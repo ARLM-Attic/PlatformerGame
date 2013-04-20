@@ -24,3 +24,23 @@ template <typename T>
 const T* findInChain(const ComponentManager& manager, const Component& chain) {
 	return static_cast<const T*>(findInChain(manager, chain, T::COMPONENT_ID));
 }
+
+template <typename T>
+T* findInChain(ComponentManager& manager, Handle chain) {
+	Component* c = manager.resolve(chain);
+	if (!c) {
+		return nullptr;
+	} else {
+		return static_cast<T*>(findInChain(manager, *c, T::COMPONENT_ID));
+	}
+}
+
+template <typename T>
+const T* findInChain(const ComponentManager& manager, Handle chain) {
+	const Component* c = manager.resolve(chain);
+	if (!c) {
+		return nullptr;
+	} else {
+		return static_cast<const T*>(findInChain(manager, *c, T::COMPONENT_ID));
+	}
+}

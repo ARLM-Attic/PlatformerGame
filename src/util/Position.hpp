@@ -40,6 +40,11 @@ inline Position mPosition(const PositionFixed x, const PositionFixed y) {
 	return pos;
 }
 
+inline Position mPosition(const ivec2 v) {
+	Position pos = {v.x, v.y};
+	return pos;
+}
+
 inline vec2 operator -(const Position a, const Position b) {
 	return mvec2((a.x - b.x).toFloat(), (a.y - b.y).toFloat());
 }

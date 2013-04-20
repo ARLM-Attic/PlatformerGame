@@ -30,6 +30,9 @@
 #include "Map.hpp"
 #include "debug/DebugMenu.hpp"
 #include "debug/Editor.hpp"
+#include "entity/EntityFactory.hpp"
+#include "entity/EntityIds.hpp"
+#include "Context.hpp"
 
 std::string formatFrametimeFloat(double x) {
 	std::ostringstream ss;
@@ -67,8 +70,6 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 
 	game_state.player_layer.draw(draw_state.sprite_buffers[RenderState::LAYER_TILESET], game_state.camera);
 
-	game_state.player.draw(draw_state.sprite_buffers[RenderState::LAYER_CHARACTER], game_state.camera);
-
 	drawFrametime(game_state, draw_state.sprite_buffers[RenderState::LAYER_UI]);
 
 	drawDebugMenu(draw_state.sprite_buffers[RenderState::LAYER_UI], ui_font);
@@ -83,11 +84,15 @@ void drawScene(const GameState& game_state, RenderState& draw_state) {
 	}
 }
 
-void cameraSpring(const Player& player, Camera& camera) {
-	vec2 displacement = vector_cast<float>(camera.pos.integer() - (player.pos.integer() + (player.size / 2) + mivec2(player.facing_direction * (WINDOW_WIDTH / 6), 0)));
+void cameraSpring(const ComponentManager& manager, const Handle player, Camera& camera) {
+	const ivec2 player_pos = findInChain<PositionComponent>(manager, player)->position;
+	const ivec2 player_size = findInChain<BoundingRect>(manager, player)->size;
+	const CharacterMovement& movement = *findInChain<CharacterMovement>(manager, player);
+
+	vec2 displacement = vector_cast<float>(camera.pos.integer() - (player_pos + (player_size / 2) + mivec2(movement.facing_direction * (WINDOW_WIDTH / 6), 0)));
 	float k = 0.001f;
 	float b = 2.f * std::sqrt(k);
-	vec2 player_velocity = { player.move_velocity, player.jump_velocity };
+	vec2 player_velocity = { movement.move_velocity, movement.jump_velocity };
 	vec2 force = -k * displacement - b * (camera.velocity - player_velocity);
 	camera.velocity = camera.velocity + force;
 	camera.pos = camera.pos + camera.velocity;
@@ -130,8 +135,10 @@ void updateScene(GameState& game_state) {
 	if (editorIsEnabled()) {
 		editorUpdate(game_state);
 	} else {
-		game_state.player.update(game_state);
-		cameraSpring(game_state.player, game_state.camera);
+		for (CharacterMovement& movement : game_state.component_manager.component_pool_CharacterMovement) {
+			movement.update(game_state.component_manager, game_state.input, game_state.player_layer);
+		}
+		cameraSpring(game_state.component_manager, game_state.player, game_state.camera);
 	}
 
 	updateDebugMenu(game_state.input);
@@ -190,8 +197,12 @@ int main(int argc, const char* argv[]) {
 	// Initialize game state //
 	///////////////////////////
 	GameState game_state;
-	RandomGenerator& rng = game_state.rng;
-	rng.seed(1235);
+
+	Context context;
+	context.game_state = &game_state;
+	context.render_state = &draw_state;
+
+	game_state.rng.seed(1235);
 
 	{
 		BackgroundLayer& l = game_state.player_layer;
@@ -201,22 +212,10 @@ int main(int argc, const char* argv[]) {
 		l.position = mivec2(0, 0);
 	}
 
-	game_state.player.init(draw_state.characters_sprdb);
-	game_state.player.pos = mPosition(96, 192);
+	game_state.player = createEntity(game_state.component_manager, context, EntityId::Player);
 
-	game_state.camera.pos = game_state.player.pos;
+	game_state.camera.pos = mPosition(findInChain<PositionComponent>(game_state.component_manager, game_state.player)->position);
 	game_state.camera.velocity = vec2_0;
-
-	{
-		auto pos = game_state.component_manager.createComponent<PositionComponent>();
-		pos->position = mivec2(128, 64);
-		auto spr = game_state.component_manager.createComponent<SpriteComponent>();
-		spr->layer = RenderState::LAYER_CHARACTER;
-		spr->image = draw_state.characters_sprdb.lookup("player_stand");
-		spr->origin = mivec2(spr->image.w / 2, spr->image.h / 2);
-
-		insertInChain(*pos, *spr);
-	}
 	
 	editorInit();
 

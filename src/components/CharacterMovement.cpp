@@ -1,12 +1,10 @@
-#include "Player.hpp"
-
-#include "GameState.hpp"
-#include "RenderState.hpp"
-#include "render/SpriteDb.hpp"
-#include "Camera.hpp"
-#include "game_types.hpp"
-#include <iostream>
+#include "CharacterMovement.hpp"
 #include "debug/DebugConstant.hpp"
+#include "game_types.hpp"
+#include "objects/BackgroundLayer.hpp"
+#include "util/util.hpp"
+#include "PositionComponent.hpp"
+#include "BoundingRect.hpp"
 
 static DebugConstant<float> MAX_MOVEMENT_VEL(2.25f, "Max move");
 static DebugConstant<float> MOVEMENT_VEL_ACCEL(0.15f, "Move accel");
@@ -16,10 +14,9 @@ static DebugConstant<float> JUMP_HIGH_GRAVITY(0.25f, "Jump high grav");
 static DebugConstant<float> JUMP_LOW_GRAVITY(0.8f, "Jump low grav");
 static DebugConstant<float> LEDGE_FALL_VELOCITY(1, "Ledge fall vel");
 
-void Player::init(const SpriteDb& sprite_db) {
-	image = sprite_db.lookup("player_stand");
+void CharacterMovement::init() {
+	sub_position[0] = sub_position[1] = 0;
 	on_ground = false;
-	size = mivec2(16, 32);
 
 	facing_direction = 1;
 	move_velocity = 0.f;
@@ -27,8 +24,10 @@ void Player::init(const SpriteDb& sprite_db) {
 	jump_grace_counter = 0;
 }
 
-void Player::update(GameState& game_state) {
-	const InputButtons& input = game_state.input;
+void CharacterMovement::update(ComponentManager& component_manager, const InputButtons& input, const BackgroundLayer& collision_layer) {
+	PositionComponent* pos = findInChain<PositionComponent>(component_manager, *this);
+	const BoundingRect* rect = findInChain<BoundingRect>(component_manager, *this);
+
 	vec2 displacement = vec2_0;
 
 	if ((!input.held[InputButtons::LEFT] && move_velocity < 0) || (!input.held[InputButtons::RIGHT] && move_velocity > 0)) {
@@ -67,30 +66,33 @@ void Player::update(GameState& game_state) {
 	displacement.x += move_velocity;
 	displacement.y += jump_velocity;
 
-	const BackgroundLayer& layer = game_state.player_layer;
-
 	auto checkCollision = [&](int d, int horz) {
-		const int bottom = pos[1-d].integer() + size[1-d] - 1;
+		const int bottom = pos->position[1-d] + rect->size[1-d] - 1;
 		bool collided = false;
 		ivec2 sensor_pos;
 		sensor_pos[d] = horz;
-		for (int y = pos[1-d].integer(); y < bottom; y += layer.tile_size[1-d]) {
+		for (int y = pos->position[1-d]; y < bottom; y += collision_layer.tile_size[1-d]) {
 			sensor_pos[1-d] = y;
-			collided = collided || layer.getTileAt(sensor_pos);
+			collided = collided || collision_layer.getTileAt(sensor_pos);
 		}
 		sensor_pos[1-d] = bottom;
-		collided = collided || layer.getTileAt(sensor_pos);
+		collided = collided || collision_layer.getTileAt(sensor_pos);
 
 		return collided;
 	};
 
 	for (int d = 0; d < 2; ++d) {
 		if (displacement[d] != 0.f) {
-			pos[d] += PositionFixed(displacement[d]);
+			int pos_tmp = (pos->position[d] << 8) + sub_position[d];
+			pos_tmp += (int)(displacement[d] * 256.f);
+			pos->position[d] = pos_tmp >> 8;
+			sub_position[d] = pos_tmp & 0xFF;
 
-			int horz = pos[d].integer();
+			//pos->position[d] += PositionFixed(displacement[d]);
+
+			int horz = pos->position[d];
 			if (displacement[d] > 0.f) {
-				horz += size[d] - 1;
+				horz += rect->size[d] - 1;
 			}
 
 			if (checkCollision(d, horz)) {
@@ -105,15 +107,15 @@ void Player::update(GameState& game_state) {
 				}
 
 				if (displacement[d] < 0.f) {
-					pos[d] = (((pos[d].integer() - layer.position[d]) / layer.tile_size[d] + 1) * layer.tile_size[d]) + layer.position[d];
+					pos->position[d] = (((pos->position[d] - collision_layer.position[d]) / collision_layer.tile_size[d] + 1) * collision_layer.tile_size[d]) + collision_layer.position[d];
 				} else if (displacement[d] > 0.f) {
-					pos[d] = (((pos[d].integer() - layer.position[d]) / layer.tile_size[d]) * layer.tile_size[d]) + layer.position[d];
+					pos->position[d] = (((pos->position[d] - collision_layer.position[d]) / collision_layer.tile_size[d]) * collision_layer.tile_size[d]) + collision_layer.position[d];
 				}
 			}
 		}
 	}
 
-	bool new_on_ground = checkCollision(1, pos[1].integer() + size[1]);
+	bool new_on_ground = checkCollision(1, pos->position[1] + rect->size[1]);
 	if (on_ground && !new_on_ground && jump_velocity == 0) {
 		jump_velocity = LEDGE_FALL_VELOCITY;
 	}
@@ -121,11 +123,4 @@ void Player::update(GameState& game_state) {
 	if (on_ground) {
 		jump_grace_counter = 2;
 	}
-}
-
-void Player::draw(SpriteBuffer& buffer, const Camera& camera) const {
-	Sprite spr;
-	spr.img = image;
-	spr.pos = camera.transform(pos.integer() + mivec2(-8, 0));
-	buffer.append(spr);
 }

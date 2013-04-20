@@ -9,6 +9,8 @@ struct Component;
 
 #include "components/PositionComponent.hpp"
 #include "components/SpriteComponent.hpp"
+#include "components/BoundingRect.hpp"
+#include "components/CharacterMovement.hpp"
 
 struct ComponentManager {
 #define COMPONENT_DEF(id, class_name) \

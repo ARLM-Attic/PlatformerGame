@@ -5,18 +5,17 @@
 
 #include "Camera.hpp"
 #include "BackgroundLayer.hpp"
-#include "Player.hpp"
 #include "entity/ComponentManager.hpp"
 
 struct GameState {
-	ComponentManager component_manager;
 	RandomGenerator rng;
 	InputButtons input;
 	Camera camera;
 
 	BackgroundLayer player_layer;
 
-	Player player;
+	Handle player;
+	ComponentManager component_manager;
 
 	double frametime_min, frametime_avg, frametime_max, fps;
 };
