@@ -60,10 +60,10 @@ void editorUpdate(GameState& game_state) {
 			game_state.camera.pos.y += scroll_speed;
 		}
 
+		BackgroundLayer& layer = game_state.level_layers[GameState::LAYER_FOREGROUND];
+
 		if (input.pressed[InputButtons::EDITOR_CHOOSE_TILE]) {
 			editor_state.saved_mouse_pos = game_state.input.mouse_pos;
-
-			const BackgroundLayer& layer = game_state.player_layer;
 
 			ivec2 new_mouse;
 			intDiv(editor_state.current_tile_id, layer.tiles_per_row, new_mouse.y, new_mouse.x);
@@ -72,13 +72,13 @@ void editorUpdate(GameState& game_state) {
 
 			editor_state.mode = EditorState::MODE_TILECHOOSER;
 		} else if (input.pressed[InputButtons::EDITOR_PICK_TILE]) {
-			editor_state.current_tile_id = game_state.player_layer.getTileAt(editor_state.mouse_coords);
+			editor_state.current_tile_id = layer.getTileAt(editor_state.mouse_coords);
 		} else if (input.held[InputButtons::EDITOR_PLACE_TILE]) {
-			ivec2 map_coord = game_state.player_layer.getTilePosAt(editor_state.mouse_coords);
-			game_state.player_layer.map.set(map_coord.x, map_coord.y, editor_state.current_tile_id);
+			ivec2 map_coord = layer.getTilePosAt(editor_state.mouse_coords);
+			layer.map.set(map_coord.x, map_coord.y, editor_state.current_tile_id);
 		}
 	} else if (editor_state.mode == EditorState::MODE_TILECHOOSER) {
-		const BackgroundLayer& layer = game_state.player_layer;
+		const BackgroundLayer& layer = game_state.level_layers[GameState::LAYER_FOREGROUND];
 
 		ivec2 selected_tile = game_state.input.mouse_pos / layer.tile_size;
 		selected_tile.x = clamp(0, selected_tile.x, layer.tiles_per_row - 1);
@@ -104,10 +104,12 @@ void editorDraw(const GameState& game_state, RenderState& render_state) {
 		render_state.drawSprites();
 		render_state.drawTileLayers();
 
+		const BackgroundLayer& layer = game_state.level_layers[GameState::LAYER_FOREGROUND];
+
 		// Draw tile cursor
 		Sprite tile_spr;
-		tile_spr.img = game_state.player_layer.getTileImgRect(editor_state.current_tile_id);
-		tile_spr.pos = intRoundTo(editor_state.mouse_coords - game_state.player_layer.position, game_state.player_layer.tile_size) + game_state.player_layer.position;
+		tile_spr.img = layer.getTileImgRect(editor_state.current_tile_id);
+		tile_spr.pos = intRoundTo(editor_state.mouse_coords - layer.position, layer.tile_size) + layer.position;
 		tile_spr.pos = game_state.camera.transform(tile_spr.pos);
 		tile_spr.color = makeColor(128, 128, 128, 64);
 		render_state.sprite_buffers[RenderState::LAYER_TILES_FG].append(tile_spr);

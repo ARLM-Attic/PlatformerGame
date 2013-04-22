@@ -107,7 +107,7 @@ void updateScene(GameState& game_state) {
 		editorUpdate(game_state);
 	} else {
 		for (CharacterMovement& movement : game_state.component_manager.component_pool_CharacterMovement) {
-			movement.update(game_state.input, game_state.player_layer);
+			movement.update(game_state.input, game_state.level_layers[GameState::LAYER_FOREGROUND]);
 		}
 		cameraSpring(game_state.player, game_state.camera);
 	}
@@ -176,7 +176,7 @@ int main(int argc, const char* argv[]) {
 	game_state.rng.seed(1235);
 
 	{
-		BackgroundLayer& l = game_state.player_layer;
+		BackgroundLayer& l = game_state.level_layers[GameState::LAYER_FOREGROUND];
 		l.map = loadMap("tilemap.txt");
 		l.tile_size.x = l.tile_size.y = 16;
 		const TextureInfo& texture = draw_state.sprite_buffers[RenderState::LAYER_TILES_FG].texture;

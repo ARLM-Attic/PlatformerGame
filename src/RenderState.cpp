@@ -29,7 +29,7 @@ void RenderState::drawSprites() {
 
 void RenderState::drawTileLayers() {
 	const GameState& game_state = *context.game_state;
-	game_state.player_layer.draw(sprite_buffers[RenderState::LAYER_TILES_FG], game_state.camera);
+	game_state.level_layers[GameState::LAYER_FOREGROUND].draw(sprite_buffers[RenderState::LAYER_TILES_FG], game_state.camera);
 }
 
 void RenderState::drawFrametime() {

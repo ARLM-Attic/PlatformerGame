@@ -8,11 +8,16 @@
 #include "entity/ComponentManager.hpp"
 
 struct GameState {
+	enum LevelLayer {
+		LAYER_FOREGROUND,
+		LAYER_MAX
+	};
+
 	RandomGenerator rng;
 	InputButtons input;
 	Camera camera;
 
-	BackgroundLayer player_layer;
+	std::array<BackgroundLayer, LAYER_MAX> level_layers;
 
 	Handle player;
 	ComponentManager component_manager;
