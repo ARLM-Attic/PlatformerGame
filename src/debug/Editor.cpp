@@ -110,20 +110,20 @@ void editorDraw(const GameState& game_state, RenderState& render_state) {
 		tile_spr.pos = intRoundTo(editor_state.mouse_coords - game_state.player_layer.position, game_state.player_layer.tile_size) + game_state.player_layer.position;
 		tile_spr.pos = game_state.camera.transform(tile_spr.pos);
 		tile_spr.color = makeColor(128, 128, 128, 64);
-		render_state.sprite_buffers[RenderState::LAYER_TILESET].append(tile_spr);
+		render_state.sprite_buffers[RenderState::LAYER_TILES_FG].append(tile_spr);
 
 		// Draw status line text
 		boost::format status_text_fmt("%1% - X: %2% Y: %3%");
 		status_text = str(status_text_fmt % "TILES" % editor_state.mouse_coords.x % editor_state.mouse_coords.y);
 	} else if (editor_state.mode == EditorState::MODE_TILECHOOSER) {
-		const TextureInfo& texture = render_state.sprite_buffers[RenderState::LAYER_TILESET].texture;
+		const TextureInfo& texture = render_state.sprite_buffers[RenderState::LAYER_TILES_FG].texture;
 
 		Sprite spr;
 		spr.img.x = spr.img.y = 0;
 		spr.img.w = texture.width;
 		spr.img.h = texture.height;
 		spr.pos = ivec2_0;
-		render_state.sprite_buffers[RenderState::LAYER_TILESET].append(spr);
+		render_state.sprite_buffers[RenderState::LAYER_TILES_FG].append(spr);
 
 		boost::format status_text_fmt("TILE ID: %1%");
 		status_text = str(status_text_fmt % editor_state.current_tile_id);

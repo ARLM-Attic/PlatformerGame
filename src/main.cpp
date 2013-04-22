@@ -154,7 +154,7 @@ int main(int argc, const char* argv[]) {
 	RenderState draw_state;
 	CHECK_GL_ERROR;
 
-	draw_state.sprite_buffers[RenderState::LAYER_TILESET].texture = loadTexture("tileset.png");
+	draw_state.sprite_buffers[RenderState::LAYER_TILES_FG].texture = loadTexture("tileset.png");
 
 	draw_state.sprite_buffers[RenderState::LAYER_CHARACTER].texture = loadTexture("characters.png");
 	draw_state.characters_sprdb.loadFromCsv("characters.csv");
@@ -179,7 +179,7 @@ int main(int argc, const char* argv[]) {
 		BackgroundLayer& l = game_state.player_layer;
 		l.map = loadMap("tilemap.txt");
 		l.tile_size.x = l.tile_size.y = 16;
-		const TextureInfo& texture = draw_state.sprite_buffers[RenderState::LAYER_TILESET].texture;
+		const TextureInfo& texture = draw_state.sprite_buffers[RenderState::LAYER_TILES_FG].texture;
 		l.tiles_per_row = texture.width / l.tile_size.x;
 		int tile_rows = texture.height / l.tile_size.y;
 		l.num_tiles = tile_rows * l.tiles_per_row;
