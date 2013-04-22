@@ -527,7 +527,7 @@
     <ClInclude Include="src\util\DynamicPoolAllocator.hpp" />
     <ClInclude Include="src\util\Fixed.hpp" />
     <ClInclude Include="src\objects\GameState.hpp" />
-    <ClInclude Include="src\game_types.hpp" />
+    <ClInclude Include="src\InputButtons.hpp" />
     <ClInclude Include="src\util\geometry.hpp" />
     <ClInclude Include="src\gl\Buffer.hpp" />
     <ClInclude Include="src\gl\gl_1_5.h" />

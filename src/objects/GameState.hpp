@@ -1,6 +1,6 @@
 #pragma once
 #include "util/util.hpp"
-#include "game_types.hpp"
+#include "InputButtons.hpp"
 #include <vector>
 
 #include "Camera.hpp"

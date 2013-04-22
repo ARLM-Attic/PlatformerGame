@@ -17,7 +17,7 @@
 #include "util/vec2.hpp"
 #include "render/graphics_init.hpp"
 #include "render/texture.hpp"
-#include "game_types.hpp"
+#include "InputButtons.hpp"
 #include "objects/GameState.hpp"
 #include "RenderState.hpp"
 #include "util/geometry.hpp"

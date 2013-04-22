@@ -1,6 +1,6 @@
 #include "CharacterMovement.hpp"
 #include "debug/DebugConstant.hpp"
-#include "game_types.hpp"
+#include "InputButtons.hpp"
 #include "objects/BackgroundLayer.hpp"
 #include "util/util.hpp"
 #include "PositionComponent.hpp"

@@ -2,7 +2,7 @@
 #include "objects/Camera.hpp"
 #include "render/SpriteBuffer.hpp"
 #include "render/text.hpp"
-#include "game_types.hpp"
+#include "InputButtons.hpp"
 
 DebugConstantBase* debug_constant_list_head = nullptr;
 DebugConstantBase* debug_constant_list_tail = nullptr;
