@@ -132,10 +132,10 @@ void SpriteBuffer::clear() {
 }
 
 void SpriteBuffer::append(const Sprite& spr) {
-	float img_x = spr.img.x / static_cast<float>(texture.width);
-	float img_w = spr.img.w / static_cast<float>(texture.width);
-	float img_y = spr.img.y / static_cast<float>(texture.height);
-	float img_h = spr.img.h / static_cast<float>(texture.height);
+	float img_x = spr.img.x / static_cast<float>(texture->width);
+	float img_w = spr.img.w / static_cast<float>(texture->width);
+	float img_y = spr.img.y / static_cast<float>(texture->height);
+	float img_h = spr.img.h / static_cast<float>(texture->height);
 
 	VertexData v;
 	v.color[0] = spr.color.r;
@@ -165,10 +165,10 @@ void SpriteBuffer::append(const Sprite& spr) {
 }
 
 void SpriteBuffer::append(const Sprite& spr, const SpriteMatrix& matrix) {
-	float img_x = spr.img.x / static_cast<float>(texture.width);
-	float img_w = spr.img.w / static_cast<float>(texture.width);
-	float img_y = spr.img.y / static_cast<float>(texture.height);
-	float img_h = spr.img.h / static_cast<float>(texture.height);
+	float img_x = spr.img.x / static_cast<float>(texture->width);
+	float img_w = spr.img.w / static_cast<float>(texture->width);
+	float img_y = spr.img.y / static_cast<float>(texture->height);
+	float img_h = spr.img.h / static_cast<float>(texture->height);
 
 	VertexData v;
 	v.color[0] = spr.color.r;
@@ -215,7 +215,7 @@ void SpriteBuffer::draw(SpriteBufferIndices& indices) const {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo.name);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData)*vertices.size(), vertices.data(), GL_STREAM_DRAW);
 	VertexData::setupVertexAttribs();
-	glBindTexture(GL_TEXTURE_2D, texture.handle.name);
+	glBindTexture(GL_TEXTURE_2D, texture->handle.name);
 	glDrawElements(GL_TRIANGLES, sprite_count * 6, GL_UNSIGNED_SHORT, nullptr);
 
 	CHECK_GL_ERROR_PARANOID;

@@ -6,6 +6,7 @@
 #include "render/text.hpp"
 #include "hud.hpp"
 #include <boost/format.hpp>
+#include <memory>
 
 static DebugConstant<bool> EDITOR_ENABLED(false, "Editor enabled");
 
@@ -118,7 +119,7 @@ void editorDraw(const GameState& game_state, RenderState& render_state) {
 		boost::format status_text_fmt("%1% - X: %2% Y: %3%");
 		status_text = str(status_text_fmt % "TILES" % editor_state.mouse_coords.x % editor_state.mouse_coords.y);
 	} else if (editor_state.mode == EditorState::MODE_TILECHOOSER) {
-		const TextureInfo& texture = render_state.sprite_buffers[RenderState::LAYER_TILES_FG].texture;
+		const TextureInfo& texture = *render_state.sprite_buffers[RenderState::LAYER_TILES_FG].texture;
 
 		Sprite spr;
 		spr.img.x = spr.img.y = 0;

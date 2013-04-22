@@ -7,6 +7,7 @@
 #include "gl/Buffer.hpp"
 #include "Sprite.hpp"
 #include "util/vec2.hpp"
+#include <memory>
 
 struct VertexData {
 	GLfloat pos_x, pos_y;
@@ -45,7 +46,7 @@ struct SpriteBuffer {
 
 	unsigned int sprite_count;
 	gl::Buffer vbo;
-	TextureInfo texture;
+	std::shared_ptr<TextureInfo> texture;
 
 	SpriteBuffer();
 
