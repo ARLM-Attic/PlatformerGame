@@ -95,6 +95,7 @@
     <ClCompile Include="src\objects\BackgroundLayer.cpp" />
     <ClCompile Include="src\render\debug_sprite.cpp" />
     <ClCompile Include="src\render\SpriteDb.cpp" />
+    <ClCompile Include="src\RenderState.cpp" />
     <ClCompile Include="src\tools\atlas_packer.cpp" />
     <ClCompile Include="src\tools\tools_main.cpp" />
     <ClCompile Include="src\util\csv.cpp" />

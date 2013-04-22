@@ -10,9 +10,6 @@
 #include <array>
 #include <algorithm>
 #include <string>
-#include <sstream>
-#include <ios>
-#include <iomanip>
 #include <numeric>
 #include "util/util.hpp"
 #include "util/Fixed.hpp"
@@ -36,54 +33,19 @@
 
 Context context;
 
-std::string formatFrametimeFloat(double x) {
-	std::ostringstream ss;
-	ss << std::fixed << std::setprecision(3) << x;
-	return ss.str();
-}
-
-void drawFrametime(const GameState& game_state, SpriteBuffer& ui_buffer) {
-	const std::string fps_text = "FPS: " + formatFrametimeFloat(game_state.fps);
-	const std::string min_text = "MIN: " + formatFrametimeFloat(game_state.frametime_min * 1000.0f);
-	const std::string avg_text = "AVG: " + formatFrametimeFloat(game_state.frametime_avg * 1000.0f);
-	const std::string max_text = "MAX: " + formatFrametimeFloat(game_state.frametime_max * 1000.0f);
-
-	drawString(WINDOW_WIDTH, 0*8, fps_text, ui_buffer, ui_font, TextAlignment::right, color_white);
-	drawString(WINDOW_WIDTH, 1*8, min_text, ui_buffer, ui_font, TextAlignment::right, color_white);
-	drawString(WINDOW_WIDTH, 2*8, avg_text, ui_buffer, ui_font, TextAlignment::right, color_white);
-	drawString(WINDOW_WIDTH, 3*8, max_text, ui_buffer, ui_font, TextAlignment::right, color_white);
-}
-
 void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
-	for (SpriteBuffer& buffer : draw_state.sprite_buffers) {
-		buffer.clear();
-	}
-
-	for (const SpriteComponent& sprite : game_state.component_manager.component_pool_SpriteComponent) {
-		const PositionComponent* pos = findInChain<PositionComponent>(sprite);
-		assert(pos);
-
-		Sprite spr;
-		spr.img = sprite.image;
-		spr.pos = game_state.camera.transform(pos->position) - sprite.origin;
-		draw_state.sprite_buffers[sprite.layer].append(spr);
-	}
-
-	game_state.player_layer.draw(draw_state.sprite_buffers[RenderState::LAYER_TILESET], game_state.camera);
-
-	drawFrametime(game_state, draw_state.sprite_buffers[RenderState::LAYER_UI]);
+	draw_state.clearBuffers();
+	draw_state.drawSprites();
+	draw_state.drawTileLayers();
+	draw_state.drawFrametime();
 
 	drawDebugMenu(draw_state.sprite_buffers[RenderState::LAYER_UI], ui_font);
 	if (editorIsEnabled()) {
 		editorDraw(game_state, draw_state);
 	}
 
-	/* Submit sprites */
-	glClear(GL_COLOR_BUFFER_BIT);
-	for (const SpriteBuffer& buffer : draw_state.sprite_buffers) {
-		buffer.draw(draw_state.sprite_buffer_indices);
-	}
+	draw_state.submitSprites();
 }
 
 void cameraSpring(const Handle player, Camera& camera) {

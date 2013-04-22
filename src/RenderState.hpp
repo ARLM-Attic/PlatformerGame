@@ -16,4 +16,10 @@ struct RenderState {
 	SpriteBufferIndices sprite_buffer_indices;
 	std::array<SpriteBuffer, LAYER_MAX> sprite_buffers;
 	SpriteDb characters_sprdb;
+
+	void clearBuffers();
+	void drawSprites();
+	void drawTileLayers();
+	void drawFrametime();
+	void submitSprites();
 };
