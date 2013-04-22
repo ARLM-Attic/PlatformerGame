@@ -36,14 +36,16 @@ Context context;
 void drawScene(const GameState& game_state, RenderState& draw_state) {
 	/* Draw scene */
 	draw_state.clearBuffers();
-	draw_state.drawSprites();
-	draw_state.drawTileLayers();
-	draw_state.drawFrametime();
 
-	drawDebugMenu(draw_state.sprite_buffers[RenderState::LAYER_UI], ui_font);
 	if (editorIsEnabled()) {
 		editorDraw(game_state, draw_state);
+	} else {
+		draw_state.drawSprites();
+		draw_state.drawTileLayers();
+		draw_state.drawFrametime();
 	}
+
+	drawDebugMenu(draw_state.sprite_buffers[RenderState::LAYER_UI], ui_font);
 
 	draw_state.submitSprites();
 }

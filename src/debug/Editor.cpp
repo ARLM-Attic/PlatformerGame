@@ -57,6 +57,11 @@ void editorUpdate(GameState& game_state) {
 }
 
 void editorDraw(const GameState& game_state, RenderState& render_state) {
+	// Draw world
+	render_state.drawSprites();
+	render_state.drawTileLayers();
+
+	// Draw tile cursor
 	Sprite tile_spr;
 	tile_spr.img = game_state.player_layer.getTileImgRect(editor_state.current_tile_id);
 	tile_spr.pos = intRoundTo(editor_state.mouse_coords - game_state.player_layer.position, game_state.player_layer.tile_size) + game_state.player_layer.position;
@@ -64,6 +69,7 @@ void editorDraw(const GameState& game_state, RenderState& render_state) {
 	tile_spr.color = makeColor(128, 128, 128, 64);
 	render_state.sprite_buffers[RenderState::LAYER_TILESET].append(tile_spr);
 
+	// Draw status line text
 	boost::format status_text_fmt("%1% - X: %2% Y: %3%");
 	std::string status_text = (status_text_fmt % "TILES" % editor_state.mouse_coords.x % editor_state.mouse_coords.y).str();
 	drawString(0, WINDOW_HEIGHT - ui_font.char_h, status_text, render_state.sprite_buffers[RenderState::LAYER_UI], ui_font, TextAlignment::left, color_white);
