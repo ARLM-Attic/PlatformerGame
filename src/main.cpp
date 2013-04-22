@@ -107,7 +107,7 @@ void updateScene(GameState& game_state) {
 		editorUpdate(game_state);
 	} else {
 		for (CharacterMovement& movement : game_state.component_manager.component_pool_CharacterMovement) {
-			movement.update(game_state.input, game_state.level_layers[GameState::LAYER_FOREGROUND]);
+			movement.update(game_state.input, game_state.level_layers[GameState::LAYER_ACTION]);
 		}
 		cameraSpring(game_state.player, game_state.camera);
 	}
@@ -184,6 +184,14 @@ int main(int argc, const char* argv[]) {
 		int tile_rows = texture.height / l.tile_size.y;
 		l.num_tiles = tile_rows * l.tiles_per_row;
 		l.position = mivec2(0, 0);
+	}
+
+	{
+		BackgroundLayer& l = game_state.level_layers[GameState::LAYER_ACTION];
+		l = game_state.level_layers[GameState::LAYER_FOREGROUND];
+		for (uint16_t& t : l.map.data) {
+			t = (t == 0) ? 0 : 1;
+		}
 	}
 
 	game_state.player = createEntity(EntityId::Player);

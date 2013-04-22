@@ -9,6 +9,7 @@
 
 struct GameState {
 	enum LevelLayer {
+		LAYER_ACTION,
 		LAYER_FOREGROUND,
 		LAYER_MAX
 	};
