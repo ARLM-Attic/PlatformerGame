@@ -19,6 +19,7 @@ struct InputButtons {
 		EDITOR_TOGGLE,
 		EDITOR_PICK_TILE,
 		EDITOR_PLACE_TILE,
+		EDITOR_CHOOSE_TILE,
 		EDITOR_SCROLL_LEFT,
 		EDITOR_SCROLL_RIGHT,
 		EDITOR_SCROLL_UP,
@@ -34,4 +35,5 @@ struct InputButtons {
 	Bitset released;
 
 	ivec2 mouse_pos;
+	void warpMouse(ivec2 new_pos);
 };

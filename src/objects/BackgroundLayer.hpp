@@ -11,6 +11,7 @@ struct BackgroundLayer {
 	Map map;
 	ivec2 tile_size;
 	int tiles_per_row;
+	uint16_t num_tiles;
 
 	ivec2 position;
 

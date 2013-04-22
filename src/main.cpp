@@ -80,7 +80,8 @@ void readInput(InputButtons& input) {
 	input.held.set(InputButtons::DEBUG_ENTER, glfwGetKey(GLFW_KEY_KP_ENTER) == GL_TRUE);
 
 	input.held.set(InputButtons::EDITOR_TOGGLE, glfwGetKey('`') == GL_TRUE);
-	input.held.set(InputButtons::EDITOR_PICK_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT) == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_CHOOSE_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT) == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_PICK_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE) == GL_TRUE);
 	input.held.set(InputButtons::EDITOR_PLACE_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GL_TRUE);
 	input.held.set(InputButtons::EDITOR_SCROLL_LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
 	input.held.set(InputButtons::EDITOR_SCROLL_RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
@@ -93,6 +94,10 @@ void readInput(InputButtons& input) {
 	glfwGetMousePos(&input.mouse_pos.x, &input.mouse_pos.y);
 	input.mouse_pos.x = clamp(0, input.mouse_pos.x, WINDOW_WIDTH-1);
 	input.mouse_pos.y = clamp(0, input.mouse_pos.y, WINDOW_HEIGHT-1);
+}
+
+void InputButtons::warpMouse(ivec2 new_pos) {
+	glfwSetMousePos(new_pos.x, new_pos.y);
 }
 
 void updateScene(GameState& game_state) {
@@ -173,8 +178,11 @@ int main(int argc, const char* argv[]) {
 	{
 		BackgroundLayer& l = game_state.player_layer;
 		l.map = loadMap("tilemap.txt");
-		l.tiles_per_row = 16;
-		l.tile_size[0] = l.tile_size[1] = 16;
+		l.tile_size.x = l.tile_size.y = 16;
+		const TextureInfo& texture = draw_state.sprite_buffers[RenderState::LAYER_TILESET].texture;
+		l.tiles_per_row = texture.width / l.tile_size.x;
+		int tile_rows = texture.height / l.tile_size.y;
+		l.num_tiles = tile_rows * l.tiles_per_row;
 		l.position = mivec2(0, 0);
 	}
 
