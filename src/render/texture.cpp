@@ -6,21 +6,30 @@
 #include <memory>
 #include <cassert>
 
-gl::Texture loadTexture(int* out_width, int* out_height, const std::string& filename, bool premultiply) {
-	gl::Texture main_texture;
-	glGenTextures(1, &main_texture.name);
+TextureInfo loadTexture(int width, int height, const uint8_t* data) {
+	TextureInfo tex_info;
+	tex_info.width = width;
+	tex_info.height = height;
 
-	glBindTexture(GL_TEXTURE_2D, main_texture.name);
+	glGenTextures(1, &tex_info.handle.name);
+
+	glBindTexture(GL_TEXTURE_2D, tex_info.handle.name);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+	return tex_info;
+}
+
+TextureInfo loadTexture(const std::string& filename, bool premultiply) {
 	int width, height, comp;
 	auto data = std::unique_ptr<unsigned char[], void(*)(void*)>(
-		stbi_load(filename.c_str(), &width, &height, &comp, 4), &stbi_image_free);
+		stbi_load((data_path + filename).c_str(), &width, &height, &comp, 4), &stbi_image_free);
 	if (data == nullptr)
-		return gl::Texture();
+		return TextureInfo();
 
 	if (premultiply) {
 		unsigned int size = width * height;
@@ -33,16 +42,5 @@ gl::Texture loadTexture(int* out_width, int* out_height, const std::string& file
 		}
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.get());
-
-	*out_width = width;
-	*out_height = height;
-	return main_texture;
-}
-
-TextureInfo loadTexture(const std::string& filename, bool premultiply) {
-	TextureInfo tex;
-	tex.handle = loadTexture(&tex.width, &tex.height, data_path + filename, premultiply);
-	assert(tex.handle.name != 0);
-	return tex;
+	return loadTexture(width, height, data.get());
 }

@@ -2,12 +2,13 @@
 
 #include "gl/Texture.hpp"
 #include <string>
+#include <cstdint>
 
 struct TextureInfo {
 	gl::Texture handle;
 	int width, height;
 
-	TextureInfo() { }
+	TextureInfo() : width(0), height(0) { }
 
 	TextureInfo(TextureInfo&& o)
 		: handle(std::move(o.handle)), width(o.width), height(o.height)
@@ -24,5 +25,5 @@ private:
 	NONCOPYABLE(TextureInfo);
 };
 
-gl::Texture loadTexture(int* out_width, int* out_height, const std::string& filename, bool premultiply = true);
+TextureInfo loadTexture(int width, int height, const uint8_t* data);
 TextureInfo loadTexture(const std::string& filename, bool premultiply = true);
