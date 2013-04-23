@@ -17,9 +17,10 @@ static Handle create_Player() {
 	rect.size = mivec2(16, 32);
 
 	static const std::array<ivec2, CharacterMovement::SENSOR_MAX> sensors = {{
-		/* Head */ {10 - 16,  3 - 16}, {16 - 16,  0 - 16}, {21 - 16,  3 - 16},
-		/* Body */ {10 - 16, 19 - 16},                     {21 - 16, 19 - 16},
-		/* Feet */ {10 - 16, 31 - 16}, {16 - 16, 31 - 16}, {21 - 16, 31 - 16}
+		/* Head     */ {10 - 16,  3 - 16}, {16 - 16,  0 - 16}, {21 - 16,  3 - 16},
+		/* Body Top */ {10 - 16, 16 - 16},                     {21 - 16, 16 - 16},
+		/* Body Bot */ {10 - 16, 18 - 16},                     {21 - 16, 18 - 16},
+		/* Feet     */ {10 - 16, 31 - 16}, {16 - 16, 31 - 16}, {21 - 16, 31 - 16}
 	}};
 
 	auto& movement = *manager.createComponent<CharacterMovement>();

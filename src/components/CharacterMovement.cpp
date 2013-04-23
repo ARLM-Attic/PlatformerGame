@@ -135,8 +135,8 @@ void CharacterMovement::update(const InputButtons& input, const BackgroundLayer&
 
 	int delta_x;
 	{
-		static const Sensor left_sensors[]  = {SENSOR_HEAD_LEFT,  SENSOR_BODY_LEFT,  SENSOR_FEET_LEFT};
-		static const Sensor right_sensors[] = {SENSOR_HEAD_RIGHT, SENSOR_BODY_RIGHT, SENSOR_FEET_RIGHT};
+		static const Sensor left_sensors[]  = {SENSOR_HEAD_LEFT,  SENSOR_BODY_TOP_LEFT,  SENSOR_BODY_BOTTOM_LEFT};
+		static const Sensor right_sensors[] = {SENSOR_HEAD_RIGHT, SENSOR_BODY_TOP_RIGHT, SENSOR_BODY_BOTTOM_RIGHT};
 
 		int new_xpos; int8_t new_xsubpos;
 		addSubposition(pos->position.x, sub_position[0], displacement.x, new_xpos, new_xsubpos);
