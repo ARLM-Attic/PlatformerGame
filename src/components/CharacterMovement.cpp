@@ -12,8 +12,6 @@ static DebugConstant<float> JUMP_VELOCITY(-6.f, "Jump vel");
 static DebugConstant<float> FALL_GRAVITY(0.25f, "Fall grav");
 static DebugConstant<float> JUMP_HIGH_GRAVITY(0.25f, "Jump high grav");
 static DebugConstant<float> JUMP_LOW_GRAVITY(0.8f, "Jump low grav");
-static DebugConstant<bool> TEST1(0, "TEST1");
-static DebugConstant<float> TEST2(0, "TEST2");
 
 typedef std::array<int8_t, 16> TileHeightmap;
 static const std::array<TileHeightmap, 5> slope_data = {{
@@ -222,7 +220,4 @@ void CharacterMovement::update(const InputButtons& input, const BackgroundLayer&
 	if (on_ground) {
 		jump_grace_counter = 2;
 	}
-
-	TEST1.value = on_ground;
-	TEST2.value = jump_velocity;
 }
