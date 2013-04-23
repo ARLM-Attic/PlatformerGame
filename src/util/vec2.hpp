@@ -104,6 +104,16 @@ inline Vector2<T> operator /(const Vector2<T> a, const Vector2<T> b) {
 }
 
 template <typename T>
+inline Vector2<T> operator %(const Vector2<T> v, const T s) {
+	return mVector2<T>(v.x % s, v.y % s);
+}
+
+template <typename T>
+inline Vector2<T> operator %(const Vector2<T> a, const Vector2<T> b) {
+	return mVector2<T>(a.x % b.x, a.y % b.y);
+}
+
+template <typename T>
 inline Vector2<T> operator -(const Vector2<T> v) {
 	return mVector2<T>(-v.x, -v.y);
 }

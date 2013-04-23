@@ -10,19 +10,26 @@ static Handle create_Player() {
 	ComponentManager& manager = *context.component_mgr;
 
 	auto& pos = *manager.createComponent<PositionComponent>();
-	pos.position = mivec2(96, 192);
+	pos.position = mivec2(96, 224);
 
 	auto& rect = *manager.createComponent<BoundingRect>();
-	rect.origin = mivec2(0, 0);
+	rect.origin = mivec2(8 - 16, 0 - 16);
 	rect.size = mivec2(16, 32);
+
+	static const std::array<ivec2, CharacterMovement::SENSOR_MAX> sensors = {{
+		/* Head */ { 8 - 16,  5 - 16}, {16 - 16,  0 - 16}, {23 - 16,  5 - 16},
+		/* Body */ { 8 - 16, 19 - 16}, {23 - 16, 19 - 16},
+		/* Feet */ {10 - 16, 31 - 16}, {16 - 16, 31 - 16}, {21 - 16, 31 - 16}
+	}};
 
 	auto& movement = *manager.createComponent<CharacterMovement>();
 	movement.init();
+	movement.sensors = sensors;
 
 	auto& spr = *manager.createComponent<SpriteComponent>();
 	spr.layer = RenderState::LAYER_CHARACTER;
 	spr.image = context.render_state->characters_sprdb.lookup("player_stand");
-	spr.origin = mivec2(8, 0);
+	spr.origin = mivec2(16, 16);
 
 	insertInChain(pos, rect);
 	insertInChain(pos, movement);

@@ -190,7 +190,7 @@ int main(int argc, const char* argv[]) {
 		BackgroundLayer& l = game_state.level_layers[GameState::LAYER_ACTION];
 		l = game_state.level_layers[GameState::LAYER_FOREGROUND];
 		for (uint16_t& t : l.map.data) {
-			t = (t == 0) ? 0 : 1;
+			t = (t == 0) ? 0 : (1 << 1);
 		}
 	}
 
