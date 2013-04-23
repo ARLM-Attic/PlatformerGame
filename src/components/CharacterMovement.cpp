@@ -14,7 +14,7 @@ static DebugConstant<float> JUMP_HIGH_GRAVITY(0.25f, "Jump high grav");
 static DebugConstant<float> JUMP_LOW_GRAVITY(0.8f, "Jump low grav");
 
 typedef std::array<int8_t, 16> TileHeightmap;
-static const std::array<TileHeightmap, 5> slope_data = {{
+const std::array<TileHeightmap, 5> slope_data = {{
 	/*  0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F */
 	{{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }},
 	{{ 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }},
@@ -93,7 +93,7 @@ void CharacterMovement::update(const InputButtons& input, const BackgroundLayer&
 			ivec2 map_coord = layer_pos / collision_layer.tile_size;
 			uint16_t tile_id = collision_layer.map.get(map_coord.x, map_coord.y);
 			ivec2 tile_pos = layer_pos % collision_layer.tile_size;
-			int height = slope_data[tile_id >> 1][(tile_id & 1) ? 15 - tile_pos.x : tile_pos.x];
+			int height = slope_data[tile_id >> 4][(tile_id & 1) ? 15 - tile_pos.x : tile_pos.x];
 
 			int dist_from_edge = (direction.y < 0) ? tile_pos.y : collision_layer.tile_size.y - tile_pos.y - 1;
 			if (dist_from_edge <= height) {

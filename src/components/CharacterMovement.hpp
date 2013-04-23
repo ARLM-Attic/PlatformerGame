@@ -8,6 +8,9 @@
 struct InputButtons;
 struct BackgroundLayer;
 
+typedef std::array<int8_t, 16> TileHeightmap;
+extern const std::array<TileHeightmap, 5> slope_data;
+
 struct CharacterMovement : Component {
 	static const uint16_t COMPONENT_ID = ComponentId::CharacterMovement;
 

@@ -83,6 +83,7 @@ void readInput(InputButtons& input) {
 	input.held.set(InputButtons::EDITOR_CHOOSE_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT) == GL_TRUE);
 	input.held.set(InputButtons::EDITOR_PICK_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE) == GL_TRUE);
 	input.held.set(InputButtons::EDITOR_PLACE_TILE, glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GL_TRUE);
+	input.held.set(InputButtons::EDITOR_NEXT_LAYER, glfwGetKey(GLFW_KEY_TAB) == GL_TRUE);
 	input.held.set(InputButtons::EDITOR_SCROLL_LEFT, glfwGetKey(GLFW_KEY_LEFT) == GL_TRUE);
 	input.held.set(InputButtons::EDITOR_SCROLL_RIGHT, glfwGetKey(GLFW_KEY_RIGHT) == GL_TRUE);
 	input.held.set(InputButtons::EDITOR_SCROLL_UP, glfwGetKey(GLFW_KEY_UP) == GL_TRUE);
@@ -188,9 +189,14 @@ int main(int argc, const char* argv[]) {
 
 	{
 		BackgroundLayer& l = game_state.level_layers[GameState::LAYER_ACTION];
-		l = game_state.level_layers[GameState::LAYER_FOREGROUND];
+		l.position = game_state.level_layers[GameState::LAYER_FOREGROUND].position;
+		l.tile_size = mivec2(16, 16);
+		l.tiles_per_row = 16;
+		l.num_tiles = slope_data.size() * 16;
+
+		l.map = game_state.level_layers[GameState::LAYER_FOREGROUND].map;
 		for (uint16_t& t : l.map.data) {
-			t = (t == 0) ? 0 : (1 << 1);
+			t = (t == 0) ? 0 : (1 << 4);
 		}
 	}
 

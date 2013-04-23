@@ -9,6 +9,7 @@ struct RenderState {
 	enum SpriteLayer {
 		LAYER_CHARACTER,
 		LAYER_TILES_FG,
+		LAYER_TILES_ACTION,
 		LAYER_UI,
 		LAYER_MAX
 	};
